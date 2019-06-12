@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package speechgrinder.sgapi.v1;
+
+service Slu {
+    rpc Stream(stream SluRequest)
+        returns (stream SluResponse) {}
+}
+
+message SluRequest {
+    oneof streaming_request {
+        SluConfig config = 1;
+        SluEvent event = 2;
+        bytes audio = 3;
+    }
+}
+
+message SluConfig {
+    enum Encoding {
+        LINEAR16 = 0;
+    }
+    required Encoding encoding = 0;
+    required int32 channels = 1 [default = 1];
+    required int32 sample_rate_hertz = 2 [default = 16000];
+    required string language_code = 3;
+}
+
+message SluEvent {
+    enum Event {
+        START = 0;
+        STOP = 1;
+    }
+    Event event = 0;
+}
+
+message SluResponse {
+    oneof streaming_response {
+        SluStarted started = 0;
+        Utterance utterance = 1;
+        SluFinished finished = 2;
+    }
+}
+
+message SluStarted {
+    string utterance_id = 0;
+}
+
+message SluFinished {
+    string utterance_id = 0;
+    SluError error = 1;
+}
+
+message SluError {
+    string code = 0;
+    string message = 1;
+}
+
+message Utterance {
+    string utterance_id = 0;
+    string type = 1;
+    string language_code = 3;
+    repeated Alternative alternatives = 4;
+}
+
+message Alternative {
+    float confidence = 1;
+    repeated Token tokens = 2;
+}
+
+message Token {
+    enum TokenPosition {
+        outsideOf = 0;
+        startOf = 1;
+        insideOf = 2;
+    }
+    string text = 1;
+    string text_with_trailing_space = 2; // if token not trailed by space then is equal to text
+    string lemma = 3;
+    string pos = 4;
+    string tag = 5;
+    string case = 6;
+    string number = 7;
+    string entity_type = 8;
+    TokenPosition position_in_entity = 9;
+    bool is_segment_start = 10;
+    int32 trailing_silence = 11;  // measured in centiseconds
+}
+
+/* Authentication and identity service */
+service Identity {
+    rpc Login(LoginRequest) returns (LoginResponse) {}
+}
+
+message LoginRequest {
+    string device_id = 0;
+    string app_id = 1;
+}
+
+message LoginResponse {
+    string token = 1;
+}
