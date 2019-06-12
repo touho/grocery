@@ -125,13 +125,15 @@ function connect(mic) {
 
   let recordDiv = document.getElementById("record");
 
-  function start() {
+  function start(event) {
+    event.preventDefault();
     ws.send(JSON.stringify({ event: "start" }));
     isRecording = true;
     recordDiv.innerHTML = "Recording";
   }
 
-  function stop() {
+  function stop(event) {
+    event.preventDefault();
     ws.send(JSON.stringify({ event: "stop" }));
     isRecording = false;
     recordDiv.innerHTML = "Record";
@@ -139,6 +141,8 @@ function connect(mic) {
 
   recordDiv.addEventListener("mousedown", start);
   recordDiv.addEventListener("mouseup", stop);
+  recordDiv.addEventListener("touchstart", start);
+  recordDiv.addEventListener("touchend", stop);
 }
 
 function setStatus(status) {
