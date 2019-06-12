@@ -90,6 +90,10 @@ function connect(mic) {
     console.error(event);
   };
 
+  ws.onclose = event => {
+    setStatus("WebSocket closed, refresh");
+  };
+
   ws.onmessage = message => {
     const event = JSON.parse(message.data);
     if (event.event === "transcription") {
