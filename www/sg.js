@@ -10,7 +10,7 @@ function prepare() {
     source.connect(processor);
     processor.connect(context.destination);
 
-    const mic = { context, onAudio: () => {} };
+    const mic = { stream, context, onAudio: () => {} };
     processor.onaudioprocess = buffer => mic.onAudio(buffer);
     return mic;
   };
@@ -79,6 +79,8 @@ function convertToFloat32ToInt16(buffer) {
 
 function connect(mic) {
   setStatus("Ready");
+  let recordDiv = document.getElementById("record");
+  recordDiv.innerHTML = "Record";
   let isRecording = false;
 
   const ds = downsampler(mic.context.sampleRate);
@@ -90,8 +92,20 @@ function connect(mic) {
     console.error(event);
   };
 
+  function reconnect() {
+    recordDiv.removeEventListener("click", reconnect);
+    prepare()
+      .then(connect)
+      .catch(err => {
+        console.error(err);
+        setStatus("Error: " + err);
+      });
+  }
+
   ws.onclose = event => {
-    setStatus("WebSocket closed, refresh");
+    setStatus("WebSocket closed, reconnect");
+    recordDiv.innerHTML = "Connect";
+    recordDiv.addEventListener("click", reconnect);
   };
 
   ws.onmessage = message => {
@@ -127,9 +141,20 @@ function connect(mic) {
     }
   };
 
-  let recordDiv = document.getElementById("record");
+  function timeout() {
+    ws.close();
+    mic.context.close();
+    mic.stream.getTracks().forEach(track => track.stop());
+
+    recordDiv.removeEventListener("mousedown", start);
+    recordDiv.removeEventListener("mouseup", stop);
+    recordDiv.removeEventListener("touchstart", start);
+    recordDiv.removeEventListener("touchend", stop);
+  }
+  let timeoutHandle;
 
   function start(event) {
+    clearTimeout(timeoutHandle);
     event.preventDefault();
     ws.send(JSON.stringify({ event: "start" }));
     isRecording = true;
@@ -141,12 +166,15 @@ function connect(mic) {
     ws.send(JSON.stringify({ event: "stop" }));
     isRecording = false;
     recordDiv.innerHTML = "Record";
+    timeoutHandle = setTimeout(timeout, 30000);
   }
 
   recordDiv.addEventListener("mousedown", start);
   recordDiv.addEventListener("mouseup", stop);
   recordDiv.addEventListener("touchstart", start);
   recordDiv.addEventListener("touchend", stop);
+
+  timeoutHandle = setTimeout(timeout, 30000);
 }
 
 function setStatus(status) {
