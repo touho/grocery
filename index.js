@@ -56,15 +56,24 @@ const processError = websocket => error => {
   }
 };
 
-const createProductQuery = (tokens, lang, maxProducts) => {
+const createProductQuery = (tokens, entitySpans, lang, maxProducts) => {
+  const getSpanIndex = name => entitySpans.map(span => span.label).indexOf(name);
+  const getSpan = index => (index >= 0 ? entitySpans[index] : { start: 0, end: 0 });
+  const getTokens = span => tokens.slice(span.start, span.end);
+  const getEntity = R.pipe(
+    getSpanIndex,
+    getSpan,
+    getTokens
+  );
+
   const langUnit = lang === "fi" ? "kpl" : "pcs";
 
-  const queryTokens = tokens.filter(token => token.entityType === "query");
-  const unitTokens = tokens.filter(token => token.entityType === "unit" && token.text !== "of");
-  const amountTokens = tokens.filter(token => token.entityType === "amount" && !isNaN(token.text));
+  const queryTokens = getEntity("query");
+  const unitTokens = getEntity("unit").filter(token => token.text !== "of");
+  const amountTokens = getEntity("amount").filter(token => !isNaN(token.text));
 
   const unit = unitTokens.length > 0 ? unitTokens[0].lemma : langUnit;
-  const amount = amountTokens.length > 0 ? parseFloat(amountTokens[0]) : 1;
+  const amount = amountTokens.length > 0 ? parseFloat(amountTokens[0].text) : 1;
 
   return {
     transcript: tokens.map(token => token.textWithTrailingSpace).join(""),
@@ -78,13 +87,33 @@ const createProductQuery = (tokens, lang, maxProducts) => {
   };
 };
 
-const findSegmentsFromUtterance = utterance => {
-  const starts = utterance.tokens
-    .map((token, i) => ({ isSegmentStart: token.isSegmentStart, i: i }))
-    .filter(token => token.isSegmentStart)
+const numOfNonEntityTokens = tokens => {
+  return tokens.reduce((count, token) => (token.positionInEntity === "outsideOf" ? count + 1 : count), 0);
+};
+
+const getSpansByStart = (tokens, isStartOfSpan) => {
+  const starts = tokens
+    .map((token, i) => ({ isStart: isStartOfSpan(token), i: i }))
+    .filter(token => token.isStart)
     .map(token => token.i);
-  const ends = starts.slice(1, starts.length).concat([utterance.tokens.length]);
-  return starts.map((start, i) => utterance.tokens.slice(start, ends[i]));
+  const ends = starts.slice(1, starts.length).concat([tokens.length]);
+  return starts.map((start, i) => ({ start: start, end: ends[i] }));
+};
+
+const getEntitySpans = tokens => {
+  return getSpansByStart(tokens, token => token.positionInEntity === "startOf").map(span => {
+    return {
+      label: tokens[span.start].entityType,
+      start: span.start,
+      end: span.end - numOfNonEntityTokens(tokens.slice(span.start, span.end))
+    };
+  });
+};
+
+const findSegmentsFromUtterance = utterance => {
+  return getSpansByStart(utterance.tokens, token => token.isSegmentStart).map(span =>
+    utterance.tokens.slice(span.start, span.end)
+  );
 };
 
 const findProducts = (utteranceData, languageCode) => {
@@ -92,7 +121,7 @@ const findProducts = (utteranceData, languageCode) => {
   const utterance = utteranceData.alternatives[0];
   try {
     const segments = findSegmentsFromUtterance(utterance);
-    const productQueries = segments.map(tokens => createProductQuery(tokens, language, 5));
+    const productQueries = segments.map(tokens => createProductQuery(tokens, getEntitySpans(tokens), language, 5));
     return productQueries.map(query => productSearch.queryProducts(query));
   } catch (err) {
     logger.debug("Failed to handle product query");
