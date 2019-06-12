@@ -5,7 +5,6 @@ const WebSocket = require("ws");
 const queryString = require("query-string");
 const protoLoader = require("@grpc/proto-loader");
 const grpc = require("grpc");
-const tls = require("tls");
 
 const logger = console;
 
@@ -21,7 +20,7 @@ if (process.env.SG_API_URL) {
   creds = grpc.credentials.createInsecure();
 } else {
   sgApiUrl = "api.speechgrinder.com";
-  creds = grpc.credentials.createSsl(tls.rootCertificates);
+  creds = grpc.credentials.createSsl();
 }
 
 logger.debug(`Using ${sgApiUrl} with appId "${appId}"`);
