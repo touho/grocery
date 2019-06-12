@@ -290,7 +290,11 @@ process.on("SIGTERM", shutdown);
 process.on("SIGINT", shutdown);
 
 const httpApp = express();
-httpApp.use(express.static("www"));
+httpApp.get("/", (req, res) => {
+  const baseUrl = req.headers["x-envoy-original-path"] || req.baseUrl;
+  res.redirect(baseUrl + "/index.html");
+});
+httpApp.use(express.static("www", { index: false }));
 
 const httpServer = http.createServer(httpApp);
 bindWebSocket(httpServer);
