@@ -1,4 +1,4 @@
-FROM node:11-slim
+FROM node:12-slim
 
 #RUN mkdir /data
 #COPY data /app/data/
