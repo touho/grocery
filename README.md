@@ -24,7 +24,7 @@ By default the service is listening on port `8080`.
 
 When it's running, open a browser instance at http://localhost:8080 or wherever you mounted it.
 
-It should ask for microphone access. After allowing it, you can push
+To use it, press the connect button and allow microphone access. After allowing it, you can push
 the green button and speak a product query in the microphone. Keep the button pressed down while speaking.
 
 You should see the results being displayed in the screen _as you speak_!

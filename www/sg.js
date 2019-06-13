@@ -1,23 +1,5 @@
 const wsUrl = window.location.href.replace("http", "ws").replace("index.html", "stream");
 
-function prepare() {
-  let handleSuccess = function(stream) {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    context = new AC();
-    const source = context.createMediaStreamSource(stream);
-    const processor = context.createScriptProcessor(1024, 1, 1);
-
-    source.connect(processor);
-    processor.connect(context.destination);
-
-    const mic = { stream, context, onAudio: () => {} };
-    processor.onaudioprocess = buffer => mic.onAudio(buffer);
-    return mic;
-  };
-
-  return navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(handleSuccess);
-}
-
 function generateFilter(sampleRate, cutoff, length) {
   if (length % 2 == 0) {
     throw Error("Filter length must be odd");
@@ -77,116 +59,123 @@ function convertToFloat32ToInt16(buffer) {
   return buf.buffer;
 }
 
-function connect(mic) {
-  setStatus("Ready");
-  let recordDiv = document.getElementById("record");
-  recordDiv.innerHTML = "Record";
-  let isRecording = false;
-
-  const ds = downsampler(mic.context.sampleRate);
-
-  const ws = new WebSocket(`${wsUrl}?sampleRate=16000&languageCode=fi`);
-
-  ws.onerror = event => {
-    setStatus("WebSocket error, check console for details");
-    console.error(event);
-  };
-
-  function reconnect() {
-    recordDiv.removeEventListener("click", reconnect);
-    prepare()
-      .then(connect)
-      .catch(err => {
-        console.error(err);
-        setStatus("Error: " + err);
-      });
-  }
-
-  ws.onclose = event => {
-    setStatus("WebSocket closed, reconnect");
-    recordDiv.innerHTML = "Connect";
-    recordDiv.addEventListener("click", reconnect);
-  };
-
-  ws.onmessage = message => {
-    const event = JSON.parse(message.data);
-    if (event.event === "transcription") {
-      const items = document.getElementById("items");
-      const utteranceId = event.data.utteranceId;
-      let utteranceDiv = document.getElementById(utteranceId);
-      if (!utteranceDiv) {
-        utteranceDiv = document.createElement("div");
-        utteranceDiv.setAttribute("id", utteranceId);
-        items.prepend(utteranceDiv);
-      }
-      if (event.data.segments.length > 0) {
-        utteranceDiv.innerHTML = "";
-        event.data.segments.forEach(segment => {
-          let product = segment.products[0];
-          if (product) {
-            const el = document.createElement("div");
-            el.setAttribute("class", "item");
-            el.innerHTML = `<p>${segment.transcript}</p><p class="displayText">${product.displayText}</p><img src="${product.imageUrl}"/>`;
-            utteranceDiv.prepend(el);
-          }
-        });
-      }
-    }
-  };
-
-  mic.onAudio = buffer => {
-    if (isRecording) {
-      const buffer16 = convertToFloat32ToInt16(ds(buffer.inputBuffer.getChannelData(0)));
-      ws.send(buffer16);
-    }
-  };
-
-  function timeout() {
-    ws.close();
-    mic.context.close();
-    mic.stream.getTracks().forEach(track => track.stop());
-
-    recordDiv.removeEventListener("mousedown", start);
-    recordDiv.removeEventListener("mouseup", stop);
-    recordDiv.removeEventListener("touchstart", start);
-    recordDiv.removeEventListener("touchend", stop);
-  }
-  let timeoutHandle;
-
-  function start(event) {
-    clearTimeout(timeoutHandle);
-    event.preventDefault();
-    ws.send(JSON.stringify({ event: "start" }));
-    isRecording = true;
-    recordDiv.innerHTML = "Recording";
-  }
-
-  function stop(event) {
-    event.preventDefault();
-    ws.send(JSON.stringify({ event: "stop" }));
-    isRecording = false;
-    recordDiv.innerHTML = "Record";
-    timeoutHandle = setTimeout(timeout, 30000);
-  }
-
-  recordDiv.addEventListener("mousedown", start);
-  recordDiv.addEventListener("mouseup", stop);
-  recordDiv.addEventListener("touchstart", start);
-  recordDiv.addEventListener("touchend", stop);
-
-  timeoutHandle = setTimeout(timeout, 30000);
-}
-
-function setStatus(status) {
-  document.getElementById("status").innerHTML = status;
-}
-
-window.onload = function() {
-  setStatus("Getting microphone permission");
-  prepare()
-    .then(connect)
-    .catch(err => {
-      console.error(err);
-      setStatus("Error: " + err);
-    });
+const SLU_STATE = {
+  notConnected: "Connect",
+  connecting: "Connecting",
+  ready: "Record",
+  recording: "Recording"
 };
+
+function slu() {
+  const context = { ontranscription: () => {}, onstatus: status => {}, onstatechange: text => {} };
+  const kStart = Symbol("start");
+  const kStop = Symbol("stop");
+  let ws = undefined;
+
+  function isConnected() {
+    return ws && ws.readyState === 1;
+  }
+
+  context.start = event => {
+    event.preventDefault();
+    if (isConnected()) {
+      ws[kStart]();
+      context.onstatechange(SLU_STATE.recording);
+    } else {
+      context.onstatechange(SLU_STATE.connecting);
+      prepare()
+        .then(connect)
+        .then(w => {
+          context.onstatus("Ready");
+          context.onstatechange(SLU_STATE.ready);
+          ws = w;
+        })
+        .catch(err => {
+          console.error(err);
+          context.onstatus("Error: " + err);
+        });
+    }
+  };
+
+  context.stop = event => {
+    event.preventDefault();
+    if (isConnected()) {
+      ws[kStop]();
+      context.onstatechange(SLU_STATE.ready);
+    }
+  };
+
+  function prepare() {
+    let timeoutHandle;
+
+    let handleSuccess = function(stream) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      const audioContext = new AC();
+      const source = audioContext.createMediaStreamSource(stream);
+      const processor = audioContext.createScriptProcessor(1024, 1, 1);
+
+      source.connect(processor);
+      processor.connect(audioContext.destination);
+
+      const mic = { stream, context: audioContext, onAudio: () => {} };
+      processor.onaudioprocess = buffer => mic.onAudio(buffer);
+      return mic;
+    };
+
+    return navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(handleSuccess);
+  }
+
+  function connect(mic) {
+    const ds = downsampler(mic.context.sampleRate);
+    const ws = new WebSocket(`${wsUrl}?sampleRate=16000&languageCode=fi`);
+    let timeoutHandle = undefined;
+    let isRecording = false;
+
+    ws.onerror = event => {
+      context.onstatus("WebSocket error, check console for details");
+      console.error(event);
+    };
+
+    ws.onclose = event => {
+      context.onstatus("WebSocket closed, reconnect");
+      context.onstatechange(SLU_STATE.notConnected);
+      mic.context.close();
+      mic.stream.getTracks().forEach(track => track.stop());
+    };
+
+    ws.onmessage = message => {
+      const event = JSON.parse(message.data);
+      if (event.event === "transcription") {
+        context.ontranscription(event.data);
+      }
+    };
+
+    mic.onAudio = buffer => {
+      if (isRecording) {
+        const buffer16 = convertToFloat32ToInt16(ds(buffer.inputBuffer.getChannelData(0)));
+        ws.send(buffer16);
+      }
+    };
+
+    function timeout() {
+      ws.close();
+    }
+
+    ws[kStart] = () => {
+      clearTimeout(timeoutHandle, timeout);
+      ws.send(JSON.stringify({ event: "start" }));
+      isRecording = true;
+    };
+
+    ws[kStop] = () => {
+      ws.send(JSON.stringify({ event: "stop" }));
+      isRecording = false;
+      timeoutHandle = setTimeout(timeout, 30000);
+    };
+
+    timeoutHandle = setTimeout(timeout, 30000);
+    return ws;
+  }
+
+  return context;
+}
