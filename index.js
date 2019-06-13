@@ -5,6 +5,7 @@ const WebSocket = require("ws");
 const queryString = require("query-string");
 const protoLoader = require("@grpc/proto-loader");
 const grpc = require("grpc");
+const crypto = require("crypto");
 
 const logger = console;
 
@@ -249,8 +250,11 @@ const verifyClient = (info, cb) => {
     return Promise.reject(new Error("Missing query string"));
   }
 
-  // the deviceId could be something more device specific!
-  const deviceId = info.req.headers["user-agent"];
+  // the deviceId could be something more device specific! it needs to be an uuid or a hash of some kind though.
+  const deviceId = crypto
+    .createHash("md5")
+    .update(info.req.headers["user-agent"])
+    .digest("hex");
 
   info.req[kParams] = queryString.parse(queryStr);
   return Promise.resolve()
