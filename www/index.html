@@ -27,8 +27,50 @@
   </head>
   <body>
     <script src="sg.js"></script>
+    <script type="application/javascript">
+      function ontranscription(data) {
+        const items = document.getElementById("items");
+        const utteranceId = data.utteranceId;
+        let utteranceDiv = document.getElementById(utteranceId);
+        if (!utteranceDiv) {
+          utteranceDiv = document.createElement("div");
+          utteranceDiv.setAttribute("id", utteranceId);
+          items.prepend(utteranceDiv);
+        }
+        if (data.segments.length > 0) {
+          utteranceDiv.innerHTML = "";
+          data.segments.forEach(segment => {
+            let product = segment.products[0];
+            if (product) {
+              const el = document.createElement("div");
+              el.setAttribute("class", "item");
+              el.innerHTML = `<p>${segment.transcript}</p><p class="displayText">${product.displayText}</p><img src="${
+          product.imageUrl
+        }"/>`;
+              utteranceDiv.prepend(el);
+            }
+          });
+        }
+      }
+
+      window.onload = function() {
+        const s = slu();
+        s.ontranscription = ontranscription;
+        s.onstatus = status => {
+          document.getElementById("status").innerHTML = status;
+        };
+        s.onstatechange = state => {
+          document.getElementById("record").innerHTML = state;
+        };
+        const recordDiv = document.getElementById("record");
+        recordDiv.addEventListener("mousedown", s.start);
+        recordDiv.addEventListener("mouseup", s.stop);
+        recordDiv.addEventListener("touchstart", s.start);
+        recordDiv.addEventListener("touchend", s.stop);
+      };
+    </script>
     <div id="status"></div>
-    <div id="record" class="button">Record</div>
+    <div id="record" class="button">Connect</div>
     <div id="items"></div>
   </body>
 </html>
