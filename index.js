@@ -40,6 +40,7 @@ const SgGrpc = grpc.loadPackageDefinition(
 
 const errors = {
   S01: "Invalid session",
+  S02: "Invalid deviceId",
   C01: "Client version too old",
   G01: "General failure"
 };
@@ -250,19 +251,35 @@ const verifyClient = (info, cb) => {
     return Promise.reject(new Error("Missing query string"));
   }
 
-  // the deviceId could be something more device specific! it needs to be an uuid or a hash of some kind though.
-  const deviceId = crypto
-    .createHash("md5")
-    .update(info.req.headers["user-agent"])
-    .digest("hex");
+  const params = queryString.parse(queryStr);
+  const findDeviceId = () => {
+    if (params.deviceId !== undefined) {
+      return params.deviceId;
+    } else {
+      if (info.req.headers["user-agent"] === undefined) {
+        info.req[kError] = JSON.stringify({
+          event: "error",
+          data: {
+            error: errors["S02"],
+            code: "S02"
+          }
+        });
+      } else {
+        return crypto
+          .createHash("md5")
+          .update(info.req.headers["user-agent"])
+          .digest("hex");
+      }
+    }
+  };
 
-  info.req[kParams] = queryString.parse(queryStr);
+  info.req[kParams] = params;
   return Promise.resolve()
     .then(() => {
       // TODO: find token from cookie or local storage
       const token = info.req.headers.jwt;
       if (token === undefined) {
-        return createToken(deviceId);
+        return createToken(findDeviceId());
       }
       return Promise.resolve(token);
     })
