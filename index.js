@@ -253,6 +253,7 @@ const handler = (ws, token, params) => {
   ws.on("close", () => {
     logger.debug("Client WebSocket closed");
     recognizer.end();
+    client.close();
   });
 };
 
