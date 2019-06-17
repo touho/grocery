@@ -122,15 +122,20 @@ const assignAndScoreCandidates = utterance => {
     .slice(0, maxProducts);
 };
 
-const queryProducts = utterance => {
-  const candidates = getProductCandidateIndices(utterance.compounds, utterance.lang);
+const queryProducts = queryData => {
+  const candidates = getProductCandidateIndices(queryData.compounds, queryData.lang);
+  const products = assignAndScoreCandidates(Object.assign({}, queryData, { candidates: candidates }));
+  const scoreFor = attribute => (attribute ? 1.0 : 0.0);
+  const score =
+    products.length > 0 ? products[0].score + scoreFor(queryData.hasUnit) + scoreFor(queryData.hasAmount) : 0.0;
 
   return {
-    transcript: utterance.transcript,
-    query: utterance.query,
-    normalizedQuery: utterance.normalizedQuery,
-    products: assignAndScoreCandidates(Object.assign({}, utterance, { candidates: candidates })),
-    queryId: uuidv4()
+    transcript: queryData.transcript,
+    query: queryData.query,
+    normalizedQuery: queryData.normalizedQuery,
+    products: products,
+    queryId: uuidv4(),
+    score: score
   };
 };
 

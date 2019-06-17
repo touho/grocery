@@ -74,8 +74,10 @@ const createProductQuery = (tokens, entitySpans, lang, maxProducts) => {
   const unitTokens = getEntity("unit").filter(token => token.text !== "of");
   const amountTokens = getEntity("amount").filter(token => !isNaN(token.text));
 
-  const unit = unitTokens.length > 0 ? unitTokens[0].lemma : langUnit;
-  const amount = amountTokens.length > 0 ? parseFloat(amountTokens[0].text) : 1;
+  const hasUnit = unitTokens.length > 0;
+  const hasAmount = amountTokens.length > 0;
+  const unit = hasUnit ? unitTokens[0].lemma : langUnit;
+  const amount = hasAmount ? parseFloat(amountTokens[0].text) : 1;
 
   return {
     transcript: tokens.map(token => token.textWithTrailingSpace).join(""),
@@ -85,7 +87,9 @@ const createProductQuery = (tokens, entitySpans, lang, maxProducts) => {
     amount: amount,
     unit: unit,
     maxProducts: maxProducts,
-    lang: lang
+    lang: lang,
+    hasUnit: hasUnit,
+    hasAmount: hasAmount
   };
 };
 
@@ -112,24 +116,49 @@ const getEntitySpans = tokens => {
   });
 };
 
-const findSegmentsFromUtterance = utterance => {
+const findSegments = utterance => {
   return getSpansByStart(utterance.tokens, token => token.isSegmentStart).map(span =>
     utterance.tokens.slice(span.start, span.end)
   );
 };
 
-const findProducts = (utteranceData, languageCode) => {
-  const language = languageCode.slice(0, 2);
-  const utterance = utteranceData.alternatives[0];
+const findSegmentsWithProducts = (utterance, language) => {
   try {
-    const segments = findSegmentsFromUtterance(utterance);
-    const productQueries = segments.map(tokens => createProductQuery(tokens, getEntitySpans(tokens), language, 5));
-    return productQueries.map(query => productSearch.queryProducts(query));
+    const segments = findSegments(utterance);
+    const queriesForSegments = segments.map(tokens => createProductQuery(tokens, getEntitySpans(tokens), language, 5));
+    return queriesForSegments.map(query => productSearch.queryProducts(query));
   } catch (err) {
     logger.debug("Failed to handle product query");
     logger.debug(err);
     return [];
   }
+};
+
+const softMax = values => {
+  const exponents = values.map(Math.exp);
+  const total = exponents.reduce((a, b) => a + b, 0);
+  return exponents.map(exp => exp / total);
+};
+
+const parseProductSegments = (utteranceData, languageCode) => {
+  const language = languageCode.slice(0, 2);
+  const confidences = softMax(utteranceData.alternatives.map(alternative => alternative.confidence));
+  const alternativeSegments = utteranceData.alternatives.map(alternative =>
+    findSegmentsWithProducts(alternative, language)
+  );
+  const scores = softMax(alternativeSegments.map(alt => alt.map(seg => seg.score).reduce((x, y) => x + y, 0.0)));
+
+  // you can tune alpha between 0.0 - 1.0 to control how much
+  // the product score influences which utterance alternative is selected
+  const alpha = 0.1;
+  const bestSegments =
+    alternativeSegments.length > 0
+      ? alternativeSegments
+          .map((segments, i) => ({ segments: segments, score: Math.log(confidences[i]) + alpha * Math.log(scores[i]) }))
+          .reduce((best, current, i) => (i === 0 ? current : current.score > best.score ? current : best)).segments
+      : [];
+
+  return bestSegments;
 };
 
 const processData = (websocket, languageCode) => {
@@ -144,7 +173,7 @@ const processData = (websocket, languageCode) => {
     } else if (data.finished !== undefined) {
       websocket.send(JSON.stringify({ event: "stopped", data: data.finished }));
     } else {
-      const productSegments = findProducts(data.utterance, languageCode);
+      const productSegments = parseProductSegments(data.utterance, languageCode);
       if (websocket.readyState === 1 && !R.isEmpty(productSegments)) {
         try {
           websocket.send(
