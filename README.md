@@ -20,6 +20,8 @@ If you prefer a Docker setup, there's a Dockerfile included. Just build it, and 
 
 By default the service is listening on port `8080`.
 
+If you want to store the audio streamed to the service for debugging purposes, set environment variable `RECORD_WAV=/tmp`; the value will be a path for written files. If enabled, audio is written as wav files to the path. The filename is logged out as a debug log per every utterance.
+
 ## Using the service
 
 When it's running, open a browser instance at http://localhost:8080 or wherever you mounted it.
