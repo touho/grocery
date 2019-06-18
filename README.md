@@ -2,7 +2,14 @@
 
 The nodejs application in this repository is an example of a _backend integration_  to the Speechgrinder API.
 
-- User interface, hosted at `/`
+The example is a grocery search application, where you can speak a list of groceries you want to buy from a store. The NLU configuration on the backend supports amount, unit and product name combinations. Example things to try out (depending on the example data installed):
+
+- three liters of milk
+- bread, milk, 5 kilos of potatoes
+
+## Features in this example
+
+- Simple web user interface, hosted at `/`
 - WebSocket connection between clients and this service
 - gRPC connection per client WebSocket to Speechgrinder API
 
