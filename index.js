@@ -6,6 +6,8 @@ const queryString = require("query-string");
 const protoLoader = require("@grpc/proto-loader");
 const grpc = require("grpc");
 const crypto = require("crypto");
+const wav = require("wav");
+const path = require("path");
 
 const logger = console;
 
@@ -13,6 +15,9 @@ const appId = process.env.APP_ID;
 if (appId === undefined) {
   throw new Error("APP_ID environment variable needs to be set");
 }
+
+const wavFilePath = process.env.RECORD_WAV;
+const isWavRecorderEnabled = !!wavFilePath;
 
 let sgApiUrl;
 let creds;
@@ -161,7 +166,55 @@ const parseProductSegments = (utteranceData, languageCode) => {
   return bestSegments;
 };
 
-const processData = (websocket, languageCode) => {
+class NullWavWriter {
+  constructor() {}
+  start() {}
+  write() {}
+  stop() {}
+  forceStop() {}
+}
+
+class WavWriter {
+  constructor(sampleRate) {
+    this.sampleRate = sampleRate;
+    this.writer = undefined;
+    this.utteranceId = undefined;
+    this.currentFile = undefined;
+  }
+
+  start(utteranceId) {
+    if (this.writer) {
+      this.writer.end();
+    }
+    this.currentFile = path.join(wavFilePath, `grocery-${utteranceId}.wav`);
+    this.writer = new wav.FileWriter(this.currentFile, {
+      channels: 1,
+      sampleRate: this.sampleRate,
+      bitDepth: 16
+    });
+    this.utteranceId = utteranceId;
+  }
+
+  write(chunk) {
+    if (this.writer) {
+      this.writer.write(chunk);
+    }
+  }
+
+  stop(utteranceId) {
+    if (this.writer && this.utteranceId === utteranceId) {
+      logger.debug(`Wrote ${this.currentFile}`);
+      this.writer.end();
+      this.writer = null;
+    }
+  }
+
+  forceStop() {
+    this.stop(this.utteranceId);
+  }
+}
+
+const processData = (websocket, languageCode, wavWriter) => {
   return data => {
     if (websocket.readyState !== 1) {
       // client websocket is not writable, ignore result
@@ -170,8 +223,10 @@ const processData = (websocket, languageCode) => {
     if (data.started !== undefined) {
       // slu api returns an utterance id
       websocket.send(JSON.stringify({ event: "started", data: data.started }));
+      wavWriter.start(data.started.utteranceId);
     } else if (data.finished !== undefined) {
       websocket.send(JSON.stringify({ event: "stopped", data: data.finished }));
+      wavWriter.stop(data.finished.utteranceId);
     } else {
       const productSegments = parseProductSegments(data.utterance, languageCode);
       if (websocket.readyState === 1 && !R.isEmpty(productSegments)) {
@@ -193,6 +248,9 @@ const processData = (websocket, languageCode) => {
 const handler = (ws, token, params) => {
   const sampleRateHertz = params.sampleRate ? parseInt(params.sampleRate) : 48000;
   const languageCode = params.languageCode || "en-US";
+  const wavWriter = isWavRecorderEnabled
+    ? new WavWriter(sampleRateHertz)
+    : new NullWavWriter();
 
   const config = {
     sampleRateHertz: sampleRateHertz,
@@ -207,7 +265,7 @@ const handler = (ws, token, params) => {
   const recognizer = client.Stream(metadata);
   recognizer.write({ config });
   recognizer.on("error", processError(ws));
-  recognizer.on("data", processData(ws, languageCode));
+  recognizer.on("data", processData(ws, languageCode, wavWriter));
 
   ws.on("error", error => {
     logger.error("ws got error");
@@ -234,6 +292,7 @@ const handler = (ws, token, params) => {
       }
     } else {
       // audio data
+      wavWriter.write(message);
       if (recognizer.writable) {
         try {
           recognizer.write({ audio: message });
@@ -254,6 +313,7 @@ const handler = (ws, token, params) => {
     logger.debug("Client WebSocket closed");
     recognizer.end();
     client.close();
+    wavWriter.forceStop();
   });
 };
 
