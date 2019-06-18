@@ -70,7 +70,7 @@ With an open utterance session, send audio as WebSocket binary frames. The audio
 The server starts streaming transcription events:
 
 ```json
-{"event": "transcription", data: {"utteranceId": "xxxx-xxxx-xxxx", "data": {...}}}
+{"event": "transcription", "data": {"utteranceId": "xxxx-xxxx-xxxx", "data": {}}}
 ```
 
 The `data` object in the transcription contains all the data related to the utternace the format is:
@@ -87,12 +87,13 @@ The fields in `segments` are domain specific and depends on the data used, the f
 {"segments": [
     {"transcript": "what the user said",
      "products": [
-         "amount": 1,
-         "unitName": "l",
-         "displayText": "exact name of the product",
-         "imageUrl": "https://imageoftheproduct"
-     ]},
-    ...
+         {
+             "amount": 1,
+             "unitName": "l",
+             "displayText": "exact name of the product",
+             "imageUrl": "https://imageoftheproduct"
+         }
+     ]}
 ]}
 ```
 
@@ -109,7 +110,7 @@ If the stop event is not sent, the server might not send the final few utterance
 The server sends the following stopped event when a transcription is finished. May contain an optional error message if stopped because of an error.
 
 ```json
-{"event": "stopped", data: {"utteranceId": "xxxx-xxxx-xxxx", "error": {"code": "G01", "message": "Internal error"}}}
+{"event": "stopped", "data": {"utteranceId": "xxxx-xxxx-xxxx", "error": {"code": "G01", "message": "Internal error"}}}
 ```
 
 Before closing the connection, send the following event to let the server close the connection after all utterances has been sent:
