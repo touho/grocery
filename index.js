@@ -253,6 +253,7 @@ const handler = (ws, token, params) => {
     : new NullWavWriter();
 
   const config = {
+    channels: 1,
     sampleRateHertz: sampleRateHertz,
     languageCode: languageCode
   };

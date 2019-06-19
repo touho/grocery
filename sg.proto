@@ -19,10 +19,10 @@ message SluConfig {
     enum Encoding {
         LINEAR16 = 0;
     }
-    required Encoding encoding = 0;
-    required int32 channels = 1 [default = 1];
-    required int32 sample_rate_hertz = 2 [default = 16000];
-    required string language_code = 3;
+    Encoding encoding = 1;
+    int32 channels = 2;
+    int32 sample_rate_hertz = 3;
+    string language_code = 4;
 }
 
 message SluEvent {
@@ -30,34 +30,34 @@ message SluEvent {
         START = 0;
         STOP = 1;
     }
-    Event event = 0;
+    Event event = 1;
 }
 
 message SluResponse {
     oneof streaming_response {
-        SluStarted started = 0;
-        Utterance utterance = 1;
-        SluFinished finished = 2;
+        SluStarted started = 1;
+        Utterance utterance = 2;
+        SluFinished finished = 3;
     }
 }
 
 message SluStarted {
-    string utterance_id = 0;
+    string utterance_id = 1;
 }
 
 message SluFinished {
-    string utterance_id = 0;
-    SluError error = 1;
+    string utterance_id = 1;
+    SluError error = 2;
 }
 
 message SluError {
-    string code = 0;
-    string message = 1;
+    string code = 1;
+    string message = 2;
 }
 
 message Utterance {
-    string utterance_id = 0;
-    string type = 1;
+    string utterance_id = 1;
+    string type = 2;
     string language_code = 3;
     repeated Alternative alternatives = 4;
 }
@@ -92,8 +92,8 @@ service Identity {
 }
 
 message LoginRequest {
-    string device_id = 0;
-    string app_id = 1;
+    string device_id = 1;
+    string app_id = 2;
 }
 
 message LoginResponse {
