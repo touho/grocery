@@ -38,6 +38,11 @@ the green button and speak a product query in the microphone. Keep the button pr
 
 You should see the results being displayed in the screen _as you speak_!
 
+Note that the language for the service is defined in your application configuration. If your application serves multiple
+languages, you must define the language code for every connection started. This is done by adding the URL parameter
+`languageCode` with the full language identifier (eg. `en-US`, `fi-FI`) when opening the web socket.
+See the [client WebSocket opening](www/sg.js) code.
+
 ## API overview for a push-to-talk application:
 
 1. Connect to a WebSocket at address wss://foobar

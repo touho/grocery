@@ -73,7 +73,7 @@ const createProductQuery = (tokens, entitySpans, lang, maxProducts) => {
     getTokens
   );
 
-  const langUnit = lang === "fi" ? "kpl" : "pcs";
+  const langUnit = lang === "fi-FI" ? "kpl" : "pcs";
 
   const queryTokens = getEntity("query");
   const unitTokens = getEntity("unit").filter(token => token.text !== "of");
@@ -145,8 +145,8 @@ const softMax = values => {
   return exponents.map(exp => exp / total);
 };
 
-const parseProductSegments = (utteranceData, languageCode) => {
-  const language = languageCode.slice(0, 2);
+const parseProductSegments = (utteranceData) => {
+  const language = utteranceData.languageCode.slice(0, 2);
   const confidences = softMax(utteranceData.alternatives.map(alternative => alternative.confidence));
   const alternativeSegments = utteranceData.alternatives.map(alternative =>
     findSegmentsWithProducts(alternative, language)
@@ -214,7 +214,7 @@ class WavWriter {
   }
 }
 
-const processData = (websocket, languageCode, wavWriter) => {
+const processData = (websocket, wavWriter) => {
   return data => {
     if (websocket.readyState !== 1) {
       // client websocket is not writable, ignore result
@@ -228,7 +228,7 @@ const processData = (websocket, languageCode, wavWriter) => {
       websocket.send(JSON.stringify({ event: "stopped", data: data.finished }));
       wavWriter.stop(data.finished.utteranceId);
     } else {
-      const productSegments = parseProductSegments(data.utterance, languageCode);
+      const productSegments = parseProductSegments(data.utterance);
       if (websocket.readyState === 1 && !R.isEmpty(productSegments)) {
         try {
           websocket.send(
@@ -247,7 +247,7 @@ const processData = (websocket, languageCode, wavWriter) => {
 
 const handler = (ws, token, params) => {
   const sampleRateHertz = params.sampleRate ? parseInt(params.sampleRate) : 48000;
-  const languageCode = params.languageCode || "en-US";
+  const languageCode = params.languageCode;
   const wavWriter = isWavRecorderEnabled
     ? new WavWriter(sampleRateHertz)
     : new NullWavWriter();
@@ -266,7 +266,7 @@ const handler = (ws, token, params) => {
   const recognizer = client.Stream(metadata);
   recognizer.write({ config });
   recognizer.on("error", processError(ws));
-  recognizer.on("data", processData(ws, languageCode, wavWriter));
+  recognizer.on("data", processData(ws, wavWriter));
 
   ws.on("error", error => {
     logger.error("ws got error");
