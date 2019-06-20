@@ -31,12 +31,14 @@ If you want to store the audio streamed to the service for debugging purposes, s
 
 ## Using the service
 
-When it's running, open a browser instance at http://localhost:8080 or wherever you mounted it.
+When it's running, open a browser instance at http://localhost:8080 or wherever you mounted it. 
 
 To use it, press the connect button and allow microphone access. After allowing it, you can push
 the green button and speak a product query in the microphone. Keep the button pressed down while speaking.
 
 You should see the results being displayed in the screen _as you speak_!
+
+Note that the default language for the service is `en`. If your application id serves some another language, e.g. `fi`, you should change it accordingly by redefining the variable `languageCode` in `www/sg.js` code. 
 
 ## API overview for a push-to-talk application:
 

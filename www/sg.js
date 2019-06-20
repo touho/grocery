@@ -1,4 +1,5 @@
 const wsUrl = window.location.href.replace("http", "ws").replace("index.html", "stream");
+const languageCode = 'en'
 
 function generateFilter(sampleRate, cutoff, length) {
   if (length % 2 == 0) {
@@ -127,7 +128,7 @@ function slu() {
 
   function connect(mic) {
     const ds = downsampler(mic.context.sampleRate);
-    const ws = new WebSocket(`${wsUrl}?sampleRate=16000&languageCode=fi`);
+    const ws = new WebSocket(`${wsUrl}?sampleRate=16000&languageCode=${languageCode}`);
     let timeoutHandle = undefined;
     let isRecording = false;
 
