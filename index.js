@@ -325,7 +325,7 @@ const kError = Symbol("error");
 const createToken = deviceId => {
   const client = new SgGrpc.speechgrinder.sgapi.v1.Identity(sgApiUrl, creds);
   return new Promise((resolve, reject) => {
-    client.login({ deviceId, appId: "sok" }, (err, response) => {
+    client.login({ deviceId, appId }, (err, response) => {
       if (err) {
         return reject(err);
       }
