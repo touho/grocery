@@ -247,7 +247,7 @@ const processData = (websocket, wavWriter) => {
 
 const handler = (ws, token, params) => {
   const sampleRateHertz = params.sampleRate ? parseInt(params.sampleRate) : 48000;
-  const languageCode = params.languageCode;
+  const languageCode = params.languageCode || "fi-FI";
   const wavWriter = isWavRecorderEnabled
     ? new WavWriter(sampleRateHertz)
     : new NullWavWriter();
