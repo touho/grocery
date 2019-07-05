@@ -1,27 +1,35 @@
-# Example integration to Speechgrinder API
+# Voice enabled food listing example
 
-The nodejs application in this repository is an example of a _backend integration_  to the Speechgrinder API.
+The nodejs application in this repository features a complete example of a voice enabled meal tracking or food listing (e.g. grocery shopping) application power by a _backend integration_ to the Speechgrinder API. The application uses the open source food and nutrition database [Fineli](https://fineli.fi/fineli/en/ohje/19), which contains information about 4 000 food items (with average nutrient contents) and is maintained by the Finnish National Institute for Health and Welfare. 
 
-Note: This is a more involved example. For a simple "hello world" tutorial, please refer to [the start repository](https://github.com/speechgrinder/start).
-
-The example is a grocery search application, where you can speak a list of groceries you want to buy from a store. The NLU configuration on the backend supports amount, unit and product name combinations. Example things to try out (depending on the example data installed):
+The natural language understanding (NLU) configuration on the backend supports amount, unit and food name combinations. Example things to try out:
 
 - three liters of milk
-- bread, milk, 5 kilos of potatoes
+- pears, rye bread, 2 kilos of potatoes
+
+NOTE: This is a more involved example. For a simple "hello world" tutorial, please refer to [the start repository](https://github.com/speechgrinder/start).
 
 ## Features in this example
 
 - Simple web user interface, hosted at `/`
 - WebSocket connection between clients and this service
 - gRPC connection per client WebSocket to Speechgrinder API
+- Querying Fineli nutrition data based using Speechgrinder's NLU transcripts   
+
+## Requirements
+
+- node 12 or later 
+- an application id from Speechgrinder
+
+To get an application id apply to our beta program by sending an email to [appid@speechgrinder.com](mailto:appid@speechgrinder.com).
 
 ## Building and running the service
 
-- build the application with `npm install` (node 12 or later required).
-- get some example data, see [the data directory](data)
-- get yourself an application id from Speechgrinder
+Build the application 
 
-After you get your application id, you can start the service:
+    npm install
+
+Start the service:
 
     APP_ID=<your appid> node index.js
 
@@ -50,7 +58,7 @@ See the [client WebSocket opening](www/sg.js) code.
 1. Connect to a WebSocket at address wss://foobar
 2. When the user pushes a button to talk send a start event. The server will respond with an utterance id
 3. Send audio chunks (max. size 1 megabyte) as binary frames
-4. Receive transcibe content from the server, tagged with the utterance id
+4. Receive transcribed content from the server, tagged with the utterance id
 5. Send end event when the user releases the button. Transcribes keeps coming until all of the audio has been processed.
 6. Repeat 3. when the user wants to talk again
 7. Close the connection when the user quits the application
@@ -61,7 +69,7 @@ All API calls are WebSocket text frames or audio binary frames. See the document
 
 *NOTE:* It is very important to undestand the difference between text and binary frames. As control messages and audio data is separated by the frame type.
 
-Audio format has to be 16bit linear encoded PCM audio. Preferrably with 16kHz sample rate to reduce bandwidth.
+Audio format has to be 16bit linear encoded PCM audio. Preferably with 16kHz sample rate to reduce bandwidth.
 
 Connect to the WebSocket URL `wss://your-grocery-host?sampleRate=16000&languageCode=fi` where the sample rate and language code are the ones you use.
 
@@ -106,8 +114,7 @@ The fields in `segments` are domain specific and depends on the data used, the f
          {
              "amount": 1,
              "unitName": "l",
-             "displayText": "exact name of the product",
-             "imageUrl": "https://imageoftheproduct"
+             "displayText": "exact name of the product"
          }
      ]}
 ]}

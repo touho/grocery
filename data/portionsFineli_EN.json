@@ -1,0 +1,346 @@
+{
+  "portiontypes": {
+    "default": "portion",
+    "portion": "portion",
+    "pack": "pack",
+    "box": "pack",
+    "package": "pack",
+    "cl": "centilitre",
+    "centilitre": "centilitre",
+    "centiliter": "centilitre",
+    "ml": "millilitre",
+    "millilitre": "millilitre",
+    "milliliter": "millilitre",
+    "decilitre": "decilitre",
+    "piece": "piece",
+    "plate": "plate",
+    "bowl": "bowl",
+    "cup": "cup",
+    "glass": "glass",
+    "mug": "glass",
+    "pint": "pint",
+    "jar": "pint",
+    "litre": "litre",
+    "liter": "litre",
+    "l": "litre",
+    "bar": "bar",
+    "spoon": "spoon",
+    "teaspoon": "teaspoon",
+    "tablespoon": "tablespoon",
+    "packet": "packet",
+    "bit": "bit",
+    "bottle": "bottle",
+    "bag": "bag",
+    "slice": "slice",
+    "wedge": "slice",
+    "cut": "slice",
+    "can": "can",
+    "tin": "can",
+    "pot": "can",
+    "g": "gram",
+    "gram": "gram",
+    "kg": "kilogram",
+    "kilo": "kilogram",
+    "kilogram": "kilogram"
+  },
+  "conversion": {
+    "small portion": {
+      "multiplier": 1,
+      "portiontype": "small portion"
+    },
+    "portion": {
+      "multiplier": 1,
+      "portiontype": "medium-sized portion"
+    },
+    "big portion": {
+      "multiplier": 1,
+      "portiontype": "big portion"
+    },
+    "small pack": {
+      "multiplier": 1,
+      "portiontype": "small portion"
+    },
+    "pack": {
+      "multiplier": 1,
+      "portiontype": "medium-sized portion"
+    },
+    "big pack": {
+      "multiplier": 1,
+      "portiontype": "big portion"
+    },
+    "small decilitre": {
+      "multiplier": 0.9,
+      "portiontype": "decilitre"
+    },
+    "decilitre": {
+      "multiplier": 1,
+      "portiontype": "decilitre"
+    },
+    "big decilitre": {
+      "multiplier": 1.1,
+      "portiontype": "decilitre"
+    },
+    "small centilitre": {
+      "multiplier": 0.09,
+      "portiontype": "decilitre"
+    },
+    "centilitre": {
+      "multiplier": 0.1,
+      "portiontype": "decilitre"
+    },
+    "big centilitre": {
+      "multiplier": 0.11,
+      "portiontype": "decilitre"
+    },
+    "small millilitre": {
+      "multiplier": 0.01,
+      "portiontype": "decilitre"
+    },
+    "millilitre": {
+      "multiplier": 0.01,
+      "portiontype": "decilitre"
+    },
+    "big millilitre": {
+      "multiplier": 0.01,
+      "portiontype": "decilitre"
+    },
+    "small piece": {
+      "multiplier": 1,
+      "portiontype": "small piece"
+    },
+    "piece": {
+      "multiplier": 1,
+      "portiontype": "medium-sized piece"
+    },
+    "big piece": {
+      "multiplier": 1,
+      "portiontype": "big piece"
+    },
+    "small plate": {
+      "multiplier": 1,
+      "portiontype": "small portion"
+    },
+    "plate": {
+      "multiplier": 1,
+      "portiontype": "medium-sized portion"
+    },
+    "big plate": {
+      "multiplier": 1,
+      "portiontype": "big portion"
+    },
+    "small bowl": {
+      "multiplier": 1,
+      "portiontype": "small portion"
+    },
+    "bowl": {
+      "multiplier": 1,
+      "portiontype": "medium-sized portion"
+    },
+    "big bowl": {
+      "multiplier": 1,
+      "portiontype": "big portion"
+    },
+    "small cup": {
+      "multiplier": 1.5,
+      "portiontype": "decilitre"
+    },
+    "cup": {
+      "multiplier": 2,
+      "portiontype": "decilitre"
+    },
+    "big cup": {
+      "multiplier": 2.5,
+      "portiontype": "decilitre"
+    },
+    "small glass": {
+      "multiplier": 1.5,
+      "portiontype": "decilitre"
+    },
+    "glass": {
+      "multiplier": 2,
+      "portiontype": "decilitre"
+    },
+    "big glass": {
+      "multiplier": 2.5,
+      "portiontype": "decilitre"
+    },
+    "small pint": {
+      "multiplier": 2.5,
+      "portiontype": "decilitre"
+    },
+    "pint": {
+      "multiplier": 5,
+      "portiontype": "decilitre"
+    },
+    "big pint": {
+      "multiplier": 5,
+      "portiontype": "decilitre"
+    },
+    "small litre": {
+      "multiplier": 9,
+      "portiontype": "decilitre"
+    },
+    "litre": {
+      "multiplier": 10,
+      "portiontype": "decilitre"
+    },
+    "big litre": {
+      "multiplier": 11,
+      "portiontype": "decilitre"
+    },
+    "small bar": {
+      "multiplier": 1,
+      "portiontype": "medium-sized portion"
+    },
+    "bar": {
+      "multiplier": 1,
+      "portiontype": "big portion"
+    },
+    "big bar": {
+      "multiplier": 1.2,
+      "portiontype": "big portion"
+    },
+    "small spoon": {
+      "multiplier": 1,
+      "portiontype": "teaspoon"
+    },
+    "spoon": {
+      "multiplier": 1,
+      "portiontype": "tablespoon"
+    },
+    "big spoon": {
+      "multiplier": 1,
+      "portiontype": "tablespoon"
+    },
+    "small teaspoon": {
+      "multiplier": 0.8,
+      "portiontype": "teaspoon"
+    },
+    "teaspoon": {
+      "multiplier": 1,
+      "portiontype": "teaspoon"
+    },
+    "big teaspoon": {
+      "multiplier": 1.2,
+      "portiontype": "teaspoon"
+    },
+    "small tablespoon": {
+      "multiplier": 0.8,
+      "portiontype": "tablespoon"
+    },
+    "tablespoon": {
+      "multiplier": 1,
+      "portiontype": "tablespoon"
+    },
+    "big tablespoon": {
+      "multiplier": 1.2,
+      "portiontype": "tablespoon"
+    },
+    "small packet": {
+      "multiplier": 0.8,
+      "portiontype": "big portion"
+    },
+    "packet": {
+      "multiplier": 1,
+      "portiontype": "big portion"
+    },
+    "big packet": {
+      "multiplier": 1.2,
+      "portiontype": "big portion"
+    },
+    "small bit": {
+      "multiplier": 0.8,
+      "portiontype": "small portion"
+    },
+    "bit": {
+      "multiplier": 1,
+      "portiontype": "small portion"
+    },
+    "big bit": {
+      "multiplier": 1.2,
+      "portiontype": "small portion"
+    },
+    "small bottle": {
+      "multiplier": 3.3,
+      "portiontype": "decilitre"
+    },
+    "bottle": {
+      "multiplier": 5,
+      "portiontype": "decilitre"
+    },
+    "big bottle": {
+      "multiplier": 15,
+      "portiontype": "decilitre"
+    },
+    "small bag": {
+      "multiplier": 0.8,
+      "portiontype": "big portion"
+    },
+    "bag": {
+      "multiplier": 1,
+      "portiontype": "big portion"
+    },
+    "big bag": {
+      "multiplier": 1.2,
+      "portiontype": "big portion"
+    },
+    "small slice": {
+      "multiplier": 0.8,
+      "portiontype": "small portion"
+    },
+    "slice": {
+      "multiplier": 1,
+      "portiontype": "medium-sized portion"
+    },
+    "big slice": {
+      "multiplier": 1.2,
+      "portiontype": "big portion"
+    },
+    "small can": {
+      "multiplier": 2.5,
+      "portiontype": "decilitre"
+    },
+    "can": {
+      "multiplier": 3.3,
+      "portiontype": "decilitre"
+    },
+    "big can": {
+      "multiplier": 5,
+      "portiontype": "decilitre"
+    },
+    "small gram": {
+      "multiplier": 0.75,
+      "portiontype": "gram"
+    },
+    "gram": {
+      "multiplier": 1,
+      "portiontype": "gram"
+    },
+    "big gram": {
+      "multiplier": 1.25,
+      "portiontype": "gram"
+    },
+    "small kilogram": {
+      "multiplier": 900,
+      "portiontype": "gram"
+    },
+    "kilogram": {
+      "multiplier": 1000,
+      "portiontype": "gram"
+    },
+    "big kilogram": {
+      "multiplier": 1100,
+      "portiontype": "gram"
+    },
+    "default": {
+      "multiplier": 1,
+      "portiontype": "default"
+    }
+  },
+  "portionTypeAttributes": {
+    "big": "big",
+    "large": "big",
+    "sizeable": "big",
+    "small": "small"
+  }
+}

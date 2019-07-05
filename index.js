@@ -74,12 +74,19 @@ const createProductQuery = (tokens, entitySpans, lang, maxProducts) => {
   );
 
   const queryTokens = getEntity("query");
-  const unitTokens = getEntity("unit").filter(token => token.text !== "of");
+  const unitTokens = getEntity("unit").filter(
+    token => token.text !== "of" && token.text !== "a" && token.text !== "an"
+  );
   const amountTokens = getEntity("amount").filter(token => !isNaN(token.text));
 
   const hasUnit = unitTokens.length > 0;
   const hasAmount = amountTokens.length > 0;
-  const unit = hasUnit ? unitTokens.map(t => t.lemma).join(" ") : "default";
+  const unit = hasUnit
+    ? unitTokens
+        .map(t => t.lemma)
+        .map(t => t.replace("#", ""))
+        .join(" ")
+    : "default";
   const amount = hasAmount ? parseFloat(amountTokens[0].text) : 1;
 
   return {

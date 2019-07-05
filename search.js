@@ -4,17 +4,8 @@ const uuidv4 = require("uuid/v4");
 
 const logger = console;
 
-const invertedIndex = {
-  fi: JSON.parse(fs.readFileSync("data/invertedIndex.json"))
-};
-
-const dataIndex = {
-  fi: fs
-    .readFileSync("data/data.jsonl")
-    .toString("utf8")
-    .split("\n")
-    .map(l => JSON.parse(l))
-};
+const invertedIndex = JSON.parse(fs.readFileSync("data/invertedIndex.json"));
+const dataIndex = JSON.parse(fs.readFileSync("data/data.json").toString("utf8"));
 
 const getProductCandidateIndices = (compounds, lang) => {
   if (!invertedIndex.hasOwnProperty(lang)) {

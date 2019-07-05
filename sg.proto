@@ -202,3 +202,27 @@ message LoginRequest {
 message LoginResponse {
     string token = 1; // Access token to be used for `Slu` service.
 }
+
+// Speechgrinder written language understanding service
+//
+// This service requires that the user has an accesstoken from
+// `Identity` service. The token must be included in the metadata as
+// `Authorization` key with value `Bearer TOKEN_HERE`.
+service Wlu {
+    rpc Parse(WluRequest) returns (WluReply) {}
+}
+
+message WluRequest {
+
+    // Text to be analysed
+    string text = 1;
+
+    // Language code for natural language understanding. Must
+    // match one of the languages defined in the appId
+    // configuration.
+    string language_code = 2;
+}
+
+message WluReply {
+    repeated Token tokens = 1; // Token wise linguistic analysis.
+}
