@@ -5,18 +5,12 @@ const uuidv4 = require("uuid/v4");
 const logger = console;
 
 const invertedIndex = {
-  fi: JSON.parse(fs.readFileSync("data/fi/invertedIndex.json")),
-  en: JSON.parse(fs.readFileSync("data/en/invertedIndex.json"))
+  fi: JSON.parse(fs.readFileSync("data/invertedIndex.json"))
 };
 
 const dataIndex = {
   fi: fs
-    .readFileSync("data/fi/data.jsonl")
-    .toString("utf8")
-    .split("\n")
-    .map(l => JSON.parse(l)),
-  en: fs
-    .readFileSync("data/en/data.jsonl")
+    .readFileSync("data/data.jsonl")
     .toString("utf8")
     .split("\n")
     .map(l => JSON.parse(l))

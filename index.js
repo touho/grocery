@@ -81,7 +81,7 @@ const createProductQuery = (tokens, entitySpans, lang, maxProducts) => {
 
   const hasUnit = unitTokens.length > 0;
   const hasAmount = amountTokens.length > 0;
-  const unit = hasUnit ? unitTokens[0].lemma : langUnit;
+  const unit = hasUnit ? unitTokens.map(t => t.lemma).join(" ") : langUnit;
   const amount = hasAmount ? parseFloat(amountTokens[0].text) : 1;
 
   return {
@@ -145,7 +145,7 @@ const softMax = values => {
   return exponents.map(exp => exp / total);
 };
 
-const parseProductSegments = (utteranceData) => {
+const parseProductSegments = utteranceData => {
   const language = utteranceData.languageCode.slice(0, 2);
   const confidences = softMax(utteranceData.alternatives.map(alternative => alternative.confidence));
   const alternativeSegments = utteranceData.alternatives.map(alternative =>
@@ -248,9 +248,7 @@ const processData = (websocket, wavWriter) => {
 const handler = (ws, token, params) => {
   const sampleRateHertz = params.sampleRate ? parseInt(params.sampleRate) : 48000;
   const languageCode = params.languageCode || "fi-FI";
-  const wavWriter = isWavRecorderEnabled
-    ? new WavWriter(sampleRateHertz)
-    : new NullWavWriter();
+  const wavWriter = isWavRecorderEnabled ? new WavWriter(sampleRateHertz) : new NullWavWriter();
 
   const config = {
     channels: 1,
