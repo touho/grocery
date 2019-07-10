@@ -2,6 +2,8 @@
 
 The nodejs application in this repository is an example of a _backend integration_  to the Speechgrinder API.
 
+Note: This is a more involved example. For a simple "hello world" tutorial, please refer to [the start repository](https://github.com/speechgrinder/start).
+
 The example is a grocery search application, where you can speak a list of groceries you want to buy from a store. The NLU configuration on the backend supports amount, unit and product name combinations. Example things to try out (depending on the example data installed):
 
 - three liters of milk
@@ -15,7 +17,7 @@ The example is a grocery search application, where you can speak a list of groce
 
 ## Building and running the service
 
-- build the application with `npm install`.
+- build the application with `npm install` (node 12 or later required).
 - get some example data, see [the data directory](data)
 - get yourself an application id from Speechgrinder
 
