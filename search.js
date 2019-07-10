@@ -127,7 +127,9 @@ const queryProducts = queryData => {
   const products = assignAndScoreCandidates(Object.assign({}, queryData, { candidates: candidates }));
   const scoreFor = attribute => (attribute ? 1.0 : 0.0);
   const score =
-    products.length > 0 ? products[0].score + scoreFor(queryData.hasUnit) + scoreFor(queryData.hasAmount) : 0.0;
+    products.length > 0
+      ? products[0].score + scoreFor(queryData.hasUnit) + scoreFor(queryData.hasAmount) + scoreFor(queryData.hasTime)
+      : 0.0;
 
   return {
     transcript: queryData.transcript,
