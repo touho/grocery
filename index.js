@@ -91,6 +91,7 @@ const createProductQuery = (tokens, entitySpans, lang, maxProducts) => {
     unit: unit,
     maxProducts: maxProducts,
     lang: lang,
+    hasTime: entitySpans.map(span => span.label).indexOf("time") > -1,
     hasUnit: hasUnit,
     hasAmount: hasAmount
   };
