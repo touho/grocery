@@ -15,13 +15,11 @@
       }
 
       .item {
-        border: solid 1px gray;
         padding: 10px;
       }
 
       .displayText {
         float: left;
-        width: 10%;
       }
 
       .transcript {
@@ -48,8 +46,7 @@
             const el = document.createElement("div");
             el.setAttribute("class", "item");
             if (product) {
-              el.innerHTML = `<p class="transcript">${segment.transcript}</p><p class="displayText">${product.amount}
-        ${product.unitName}<br/>${product.displayText}</p><img src="${product.imageUrl}"/>`;
+              el.innerHTML = `<div class="transcript">${segment.transcript}</div><div class="displayText">${product.amount} ${product.unitName} ${product.displayText}</div>`;
             } else {
               el.innerHTML = `<p class="transcript">${segment.transcript}</p>`;
             }
