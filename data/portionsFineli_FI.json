@@ -1,0 +1,392 @@
+{
+  "portiontypes": {
+    "default": "annos",
+    "annos": "annos",
+    "aski": "aski",
+    "askillinen": "aski",
+    "rasia": "aski",
+    "rasiallinen": "aski",
+    "cl": "senttilitra",
+    "senttilitra": "senttilitra",
+    "sentti": "senttilitra",
+    "ml": "millilitra",
+    "millilitra": "millilitra",
+    "milli": "millilitra",
+    "dl": "desilitra",
+    "desilitra": "desilitra",
+    "desi": "desilitra",
+    "kappale": "kpl",
+    "lautanen": "lautanen",
+    "lautasellinen": "lautanen",
+    "kulho": "kulho",
+    "kulhollinen": "kulho",
+    "kuppi": "kuppi",
+    "kupillinen": "kuppi",
+    "lasi": "lasi",
+    "lasillinen": "lasi",
+    "muki": "lasi",
+    "mukillinen": "lasi",
+    "tuoppi": "tuoppi",
+    "litra": "litra",
+    "l": "litra",
+    "levy": "levy",
+    "lusikka": "lusikka",
+    "lusikallinen": "lusikka",
+    "teelusikka": "teelusikka",
+    "tl": "teelusikka",
+    "teelusikallinen": "teelusikka",
+    "ruokalusikka": "ruokalusikka",
+    "rkl": "ruokalusikka",
+    "ruokalusikallinen": "ruokalusikka",
+    "paketti": "paketti",
+    "paketillinen": "paketti",
+    "pala": "pala",
+    "pullo": "pullo",
+    "pullollinen": "pullo",
+    "pussi": "pussi",
+    "pussillinen": "pussi",
+    "viipale": "viipale",
+    "siivu": "viipale",
+    "tölkki": "tölkki",
+    "tölkillinen": "tölkki",
+    "purkki": "purkki",
+    "purkillinen": "purkki",
+    "koura": "koura",
+    "kourallinen": "koura",
+    "nyrkki": "koura",
+    "nyrkillinen": "koura",
+    "g": "gramma",
+    "gramma": "gramma",
+    "kg": "kilogramma",
+    "kilo": "kilogramma",
+    "kilogramma": "kilogramma"
+  },
+  "conversion": {
+    "pieni annos": {
+      "multiplier": 1,
+      "portiontype": "pieni annos"
+    },
+    "annos": {
+      "multiplier": 1,
+      "portiontype": "keskikokoinen annos"
+    },
+    "iso annos": {
+      "multiplier": 1,
+      "portiontype": "iso annos"
+    },
+    "pieni aski": {
+      "multiplier": 1,
+      "portiontype": "pieni annos"
+    },
+    "aski": {
+      "multiplier": 1,
+      "portiontype": "keskikokoinen annos"
+    },
+    "iso aski": {
+      "multiplier": 1,
+      "portiontype": "iso annos"
+    },
+    "pieni desilitra": {
+      "multiplier": 0.9,
+      "portiontype": "desilitra"
+    },
+    "desilitra": {
+      "multiplier": 1,
+      "portiontype": "desilitra"
+    },
+    "iso desilitra": {
+      "multiplier": 1.1,
+      "portiontype": "desilitra"
+    },
+    "pieni senttilitra": {
+      "multiplier": 0.09,
+      "portiontype": "desilitra"
+    },
+    "senttilitra": {
+      "multiplier": 0.1,
+      "portiontype": "desilitra"
+    },
+    "iso senttilitra": {
+      "multiplier": 0.11,
+      "portiontype": "desilitra"
+    },
+    "pieni millilitra": {
+      "multiplier": 0.01,
+      "portiontype": "desilitra"
+    },
+    "millilitra": {
+      "multiplier": 0.01,
+      "portiontype": "desilitra"
+    },
+    "iso millilitra": {
+      "multiplier": 0.01,
+      "portiontype": "desilitra"
+    },
+    "pieni kpl": {
+      "multiplier": 1,
+      "portiontype": "pieni (kpl)"
+    },
+    "kpl": {
+      "multiplier": 1,
+      "portiontype": "keskikokoinen (kpl)"
+    },
+    "iso kpl": {
+      "multiplier": 1,
+      "portiontype": "iso (kpl)"
+    },
+    "pieni lautanen": {
+      "multiplier": 1,
+      "portiontype": "pieni annos"
+    },
+    "lautanen": {
+      "multiplier": 1,
+      "portiontype": "keskikokoinen annos"
+    },
+    "iso lautanen": {
+      "multiplier": 1,
+      "portiontype": "iso annos"
+    },
+    "pieni kulho": {
+      "multiplier": 1,
+      "portiontype": "pieni annos"
+    },
+    "kulho": {
+      "multiplier": 1,
+      "portiontype": "keskikokoinen annos"
+    },
+    "iso kulho": {
+      "multiplier": 1,
+      "portiontype": "iso annos"
+    },
+    "pieni kuppi": {
+      "multiplier": 1.5,
+      "portiontype": "desilitra"
+    },
+    "kuppi": {
+      "multiplier": 2,
+      "portiontype": "desilitra"
+    },
+    "iso kuppi": {
+      "multiplier": 2.5,
+      "portiontype": "desilitra"
+    },
+    "pieni lasi": {
+      "multiplier": 1.5,
+      "portiontype": "desilitra"
+    },
+    "lasi": {
+      "multiplier": 2,
+      "portiontype": "desilitra"
+    },
+    "iso lasi": {
+      "multiplier": 2.5,
+      "portiontype": "desilitra"
+    },
+    "pieni tuoppi": {
+      "multiplier": 2.5,
+      "portiontype": "desilitra"
+    },
+    "tuoppi": {
+      "multiplier": 5,
+      "portiontype": "desilitra"
+    },
+    "iso tuoppi": {
+      "multiplier": 5,
+      "portiontype": "desilitra"
+    },
+    "pieni litra": {
+      "multiplier": 9,
+      "portiontype": "desilitra"
+    },
+    "litra": {
+      "multiplier": 10,
+      "portiontype": "desilitra"
+    },
+    "iso litra": {
+      "multiplier": 11,
+      "portiontype": "desilitra"
+    },
+    "pieni levy": {
+      "multiplier": 1,
+      "portiontype": "keskikokoinen annos"
+    },
+    "levy": {
+      "multiplier": 1,
+      "portiontype": "iso annos"
+    },
+    "iso levy": {
+      "multiplier": 1.2,
+      "portiontype": "iso annos"
+    },
+    "pieni lusikka": {
+      "multiplier": 1,
+      "portiontype": "teelusikka"
+    },
+    "lusikka": {
+      "multiplier": 1,
+      "portiontype": "ruokalusikka"
+    },
+    "iso lusikka": {
+      "multiplier": 1,
+      "portiontype": "ruokalusikka"
+    },
+    "pieni teelusikka": {
+      "multiplier": 0.8,
+      "portiontype": "teelusikka"
+    },
+    "teelusikka": {
+      "multiplier": 1,
+      "portiontype": "teelusikka"
+    },
+    "iso teelusikka": {
+      "multiplier": 1.2,
+      "portiontype": "teelusikka"
+    },
+    "pieni ruokalusikka": {
+      "multiplier": 0.8,
+      "portiontype": "ruokalusikka"
+    },
+    "ruokalusikka": {
+      "multiplier": 1,
+      "portiontype": "ruokalusikka"
+    },
+    "iso ruokalusikka": {
+      "multiplier": 1.2,
+      "portiontype": "ruokalusikka"
+    },
+    "pieni paketti": {
+      "multiplier": 0.8,
+      "portiontype": "iso annos"
+    },
+    "paketti": {
+      "multiplier": 1,
+      "portiontype": "iso annos"
+    },
+    "iso paketti": {
+      "multiplier": 1.2,
+      "portiontype": "iso annos"
+    },
+    "pieni pala": {
+      "multiplier": 0.8,
+      "portiontype": "pieni annos"
+    },
+    "pala": {
+      "multiplier": 1,
+      "portiontype": "pieni annos"
+    },
+    "iso pala": {
+      "multiplier": 1.2,
+      "portiontype": "pieni annos"
+    },
+    "pieni pullo": {
+      "multiplier": 3.3,
+      "portiontype": "desilitra"
+    },
+    "pullo": {
+      "multiplier": 5,
+      "portiontype": "desilitra"
+    },
+    "iso pullo": {
+      "multiplier": 15,
+      "portiontype": "desilitra"
+    },
+    "pieni pussi": {
+      "multiplier": 0.8,
+      "portiontype": "iso annos"
+    },
+    "pussi": {
+      "multiplier": 1,
+      "portiontype": "iso annos"
+    },
+    "iso pussi": {
+      "multiplier": 1.2,
+      "portiontype": "iso annos"
+    },
+    "pieni viipale": {
+      "multiplier": 0.8,
+      "portiontype": "pieni annos"
+    },
+    "viipale": {
+      "multiplier": 1,
+      "portiontype": "keskikokoinen annos"
+    },
+    "iso viipale": {
+      "multiplier": 1.2,
+      "portiontype": "iso annos"
+    },
+    "pieni tölkki": {
+      "multiplier": 2.5,
+      "portiontype": "desilitra"
+    },
+    "tölkki": {
+      "multiplier": 3.3,
+      "portiontype": "desilitra"
+    },
+    "iso tölkki": {
+      "multiplier": 5,
+      "portiontype": "desilitra"
+    },
+    "pieni purkki": {
+      "multiplier": 1,
+      "portiontype": "keskikokoinen annos"
+    },
+    "purkki": {
+      "multiplier": 1,
+      "portiontype": "iso annos"
+    },
+    "iso purkki": {
+      "multiplier": 1.2,
+      "portiontype": "iso annos"
+    },
+    "pieni koura": {
+      "multiplier": 0.8,
+      "portiontype": "pieni annos"
+    },
+    "koura": {
+      "multiplier": 1,
+      "portiontype": "pieni annos"
+    },
+    "iso koura": {
+      "multiplier": 1,
+      "portiontype": "keskikokoinen annos"
+    },
+    "pieni gramma": {
+      "multiplier": 0.75,
+      "portiontype": "gramma"
+    },
+    "gramma": {
+      "multiplier": 1,
+      "portiontype": "gramma"
+    },
+    "iso gramma": {
+      "multiplier": 1.25,
+      "portiontype": "gramma"
+    },
+    "pieni kilogramma": {
+      "multiplier": 900,
+      "portiontype": "gramma"
+    },
+    "kilogramma": {
+      "multiplier": 1000,
+      "portiontype": "gramma"
+    },
+    "iso kilogramma": {
+      "multiplier": 1100,
+      "portiontype": "gramma"
+    },
+    "default": {
+      "multiplier": 1,
+      "portiontype": "default"
+    }
+  },
+  "portionTypeAttributes": {
+    "iso": "iso",
+    "runsas": "iso",
+    "reilu": "iso",
+    "kookas": "iso",
+    "pieni": "pieni",
+    "pikku": "pieni",
+    "snadi": "pieni",
+    "vajaa": "pieni"
+  }
+}
