@@ -8,7 +8,7 @@ const csv = require("csvtojson");
 const iconv = require("iconv-lite");
 const R = require("ramda");
 
-const url = "https://fineli.fi/fineli/content/file/42/Fineli_Rel_19";
+const url = "https://fineli.fi/fineli/content/file/47/Fineli_Rel20";
 
 const sizeEstimates = (definedPortions, language) => {
   if (language === "FI") {
