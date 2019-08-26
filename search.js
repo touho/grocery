@@ -35,12 +35,13 @@ const getProductCandidateIndices = (compounds, lang) => {
 };
 
 const convertAmount = (dataEntry, amount, unit) => {
-  let coefficient = dataEntry.unitConversions[unit];
+  const unitConversions = dataEntry.unitConversions || {};
+  let coefficient = unitConversions[unit];
   return coefficient
     ? dataEntry.unitName === "kpl" || dataEntry.unitName === "pcs"
       ? Math.ceil(amount * coefficient)
       : Number((amount * coefficient).toPrecision(3))
-    : undefined;
+    : amount;
 };
 
 const scoreTokenHits = tokenHits => {
@@ -97,17 +98,15 @@ const assignAndScoreCandidates = utterance => {
         displayText: entry.name,
         amount: unit ? convertAmount(entry, amount, unit) : amount,
         score: entry.tags[query] || documentCompoundScore(compounds, entry.tokenScores),
-        unitConversions: entry.unitConversions,
-        tokenScores: entry.tokenScores
+        tokenScores: entry.tokenScores,
+        unitName: entry.unitName || unit,
+        measureName: entry.measureName || unit
       })
     )
     .sort(byProductSortAttributes)
     .map(entry => {
-      entry.amount = entry.amount || 1;
-      return entry;
-    })
-    .map(entry => {
       entry.tags = undefined;
+      entry.unitConversions = undefined;
       return entry;
     })
     .slice(0, maxProducts);
