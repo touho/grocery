@@ -227,14 +227,31 @@ const coef = x => {
   return 1.0 / (1.0 + Math.exp((x - beta) / alpha));
 };
 
+const getLemmas = (analysedNames, language) => {
+  if (language === "EN") {
+    // For Fineli it is important we capture the compounds also in English
+    // Here we use punctuation as a heuristic to capture the compound words
+    return analysedNames.map(tokens => {
+      return tokens
+        .filter(token => (token.pos !== "PUNCT" && token.pos !== "SYM") || token.text === "," || token.text === "/")
+        .map(token => token.lemma)
+        .join(" ")
+        .split(/[\/|,]/)
+        .map(t => t.trim().replace(/\s/g, "#"));
+    });
+  } else {
+    return analysedNames.map(tokens => tokens.map(token => token.lemma));
+  }
+};
+
 const getFineli = () => {
   return new Promise((resolve, reject) => {
     Promise.resolve(downloadFineli(url))
       .then(fineli => unzip(fineli))
       .then(fineli => preprocess(fineli))
-      .then(fineli => resolve({ data: fineli, coef: coef }))
+      .then(fineli => resolve({ data: fineli, coef, getLemmas }))
       .catch(err => reject(err));
   });
 };
 
-module.exports = { getFineli, coef };
+module.exports = { getFineli, coef, getLemmas };

@@ -102,25 +102,6 @@ const groupIndexByToken = R.pipe(
   entry => R.map(tokens => tokens.map(x => x.i), entry)
 );
 
-const getNameLemmaTokens = (nluForNames, language) => {
-  if (language === "EN") {
-    return nluForNames.map(tokens => {
-      return tokens
-        .filter(token => (token.pos !== "PUNCT" && token.pos !== "SYM") || token.text === "," || token.text === "/")
-        .map(token => token.lemma)
-        .join(" ")
-        .split(/[\/|,]/)
-        .map(t => t.trim().replace(/\s/g, "#"));
-    });
-  } else {
-    return nluForNames.map(tokens => tokens.map(token => token.lemma));
-  }
-};
-
-const getTagLemmaTokens = nluForTags => {
-  return nluForTags.map(tags => tags.flatMap(tokens => tokens.map(token => token.lemma)));
-};
-
 const getTags = (nluForTags, score) => {
   return nluForTags
     .map(tags => tags.map(token => ({ l: token.lemma, n: token.lemma.split(/#| /).length })))
@@ -138,7 +119,7 @@ const assignIndices = (lemmas, i) => {
     });
 };
 
-const makeIndex = (data, apiCall, language, bar, coef, format, expand) => {
+const makeIndex = (data, apiCall, language, bar, coef, getLemmas, format, expand) => {
   const entries = data.map(entry => {
     return {
       name: format(entry.name),
@@ -149,8 +130,8 @@ const makeIndex = (data, apiCall, language, bar, coef, format, expand) => {
   return analyse(entries, apiCall, language, bar).then(nluForEntries => {
     const nluForNames = nluForEntries.map(entry => entry.name);
     const nluForTags = nluForEntries.map(entry => entry.tags);
-    const nameLemmaTokens = getNameLemmaTokens(nluForNames, language);
-    const tagLemmaTokens = getTagLemmaTokens(nluForTags);
+    const nameLemmaTokens = getLemmas(nluForNames, language);
+    const tagLemmaTokens = nluForTags.map(tags => tags.flatMap(tokens => tokens.map(token => token.lemma)));
 
     const dataWithScores = data.map((entry, i) => {
       return Object.assign({}, entry, {
@@ -188,10 +169,10 @@ const login = () => {
   });
 };
 
-const makeIndexForAllLanguages = (data, sgApiCall, bar, coef, format, expand) => {
+const makeIndexForAllLanguages = (data, sgApiCall, bar, coef, getLemmas, format, expand) => {
   return Promise.all(
     Object.keys(data).map(language =>
-      makeIndex(data[language], sgApiCall, language.toUpperCase(), bar, coef, format, expand).catch(err => {
+      makeIndex(data[language], sgApiCall, language.toUpperCase(), bar, coef, getLemmas, format, expand).catch(err => {
         console.log(err);
         console.log(` Skipping data index creation for language ${language}! (not supported by given application ID)`);
         data[language].forEach(t => bar.tick());
@@ -211,7 +192,13 @@ const expandWith = synonyms => name => {
     .flatMap(synonym => synonyms[synonym]));
 };
 
-const scoreData = (data, coef, replacements = [], synonyms = {}) => {
+const scoreData = (
+  data,
+  coef = () => 1.0,
+  getLemmas = x => x.map(tokens => tokens.map(token => token.lemma)),
+  replacements = [],
+  synonyms = {}
+) => {
   const languages = Object.keys(data);
   const bar = new progressBar(`   Lemmatizing :bar :percent`, {
     width: 20,
@@ -219,7 +206,7 @@ const scoreData = (data, coef, replacements = [], synonyms = {}) => {
   });
   return login()
     .then(sgApiCall =>
-      makeIndexForAllLanguages(data, sgApiCall, bar, coef, replaceWith(replacements), expandWith(synonyms))
+      makeIndexForAllLanguages(data, sgApiCall, bar, coef, getLemmas, replaceWith(replacements), expandWith(synonyms))
     )
     .then(indicies => {
       const invertedIndex = {};

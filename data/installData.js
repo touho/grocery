@@ -28,14 +28,20 @@ const getData = (dataPath, language) => {
           .filter(isJsonString)
           .map(JSON.parse)
       };
-      resolve({ data, coef: dataPath.startsWith("fineli") ? fineli.coef : x => 1.0 });
+      resolve({
+        data,
+        coef: dataPath.startsWith("fineli") ? fineli.coef : () => 1.0,
+        getLemmas: dataPath.startsWith("fineli")
+          ? fineli.getLemmas
+          : names => names.map(tokens => tokens.map(token => token.lemma))
+      });
     });
   });
 };
 
 console.log(`Installing data indices:`);
 Promise.resolve(process.argv.length === 4 ? getData(process.argv[2], process.argv[3]) : fineli.getFineli())
-  .then(input => score.scoreData(input.data, input.coef))
+  .then(input => score.scoreData(input.data, input.coef, input.getLemmas))
   .then(data => {
     fs.writeFileSync("invertedIndex.json", JSON.stringify(data.invertedIndex), "utf8");
     fs.writeFileSync("data.json", JSON.stringify(data.index), "utf8");
