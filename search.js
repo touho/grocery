@@ -106,7 +106,7 @@ const assignAndScoreCandidates = utterance => {
     .sort(byProductSortAttributes)
     .map(entry => {
       entry.tags = undefined;
-      entry.unitConversions = undefined;
+      entry.unitConversions = {};
       return entry;
     })
     .slice(0, maxProducts);
