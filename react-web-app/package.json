@@ -1,0 +1,55 @@
+{
+  "name": "poc-list",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.1",
+    "eslint-config-prettier": "^6.3.0",
+    "express": "^4.17.1",
+    "fitty": "^2.2.6",
+    "grpc": "^1.21.1",
+    "node-sass": "^4.12.0",
+    "query-string": "^6.7.0",
+    "ramda": "^0.26.1",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-fitty": "^0.0.1",
+    "react-scripts": "3.1.2",
+    "uuid": "^3.3.2",
+    "wav": "^1.0.2",
+    "ws": "^6.2.1"
+  },
+  "scripts": {
+    "scss": "node-sass src/App.scss src/App.css -w",
+    "dev": "yarn start:ui && yarn start:server",
+    "start:ui": "react-scripts start",
+    "start:server": "node src/server.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "prettier": "^1.18.2"
+  }
+}
