@@ -1,0 +1,77 @@
+.app {
+  text-align: center;
+  flex-direction: column;
+  height: 100vh; }
+  .app header {
+    background-color: #b5ce2f;
+    height: 100px;
+    width: 100%;
+    font-size: 6vw;
+    color: #f6f4ef;
+    font-family: 'Lato', sans-serif;
+    display: flex;
+    position: absolute;
+    top: 0px;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: center; }
+    .app header .line-clamp {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden; }
+  .app main {
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+    left: -100px;
+    width: 100%; }
+    .app main .list-item {
+      display: flex;
+      border-bottom: 1px solid rgba(215, 209, 191, 0.5);
+      font-family: 'Lato', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #877b59;
+      padding: 15px; }
+      .app main .list-item__info {
+        text-align: left;
+        width: 100%;
+        padding-left: 15px; }
+        .app main .list-item__info--utterance {
+          display: inline-block;
+          margin-bottom: 10px;
+          padding: 6px;
+          font-size: 12px;
+          background-color: #f6f4ef;
+          border-radius: 10px; }
+      .app main .list-item__quantity button {
+        width: 50px;
+        height: 50px;
+        font-size: 14px;
+        background: none;
+        border: solid #b5ce2f 1px; }
+      .app main .list-item img {
+        height: 75px; }
+  .app footer {
+    position: absolute;
+    bottom: 0px;
+    overflow: hidden;
+    width: 100vw;
+    min-height: 100px;
+    max-height: 200px;
+    display: flex;
+    justify-content: space-around;
+    background-color: #f6f4ef; }
+    .app footer div {
+      width: 33%; }
+      .app footer div button {
+        width: 100%;
+        height: 100%;
+        font-size: 5vh; }
+  .app .mic {
+    background: none;
+    border: none; }
+    .app .mic svg,
+    .app .mic button {
+      max-height: 75px; }
