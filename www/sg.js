@@ -106,8 +106,6 @@ function slu() {
   };
 
   function prepare() {
-    let timeoutHandle;
-
     let handleSuccess = function(stream) {
       const AC = window.AudioContext || window.webkitAudioContext;
       const audioContext = new AC();
@@ -165,7 +163,7 @@ function slu() {
     }
 
     ws[kStart] = () => {
-      clearTimeout(timeoutHandle, timeout);
+      clearTimeout(timeoutHandle);
       ws.send(JSON.stringify({ event: "start" }));
       isRecording = true;
     };
@@ -173,6 +171,7 @@ function slu() {
     ws[kStop] = () => {
       ws.send(JSON.stringify({ event: "stop" }));
       isRecording = false;
+      clearTimeout(timeoutHandle);
       timeoutHandle = setTimeout(timeout, 30000);
     };
 
