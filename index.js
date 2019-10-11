@@ -434,11 +434,19 @@ process.on("SIGTERM", shutdown);
 process.on("SIGINT", shutdown);
 
 const httpApp = express();
-httpApp.get("/", (req, res) => {
-  const baseUrl = req.headers["x-envoy-original-path"] || req.baseUrl;
-  res.redirect(baseUrl + "/index.html");
+httpApp.use(express.static(path.join(__dirname, "www")));
+
+httpApp.get("/ping", function(req, res) {
+  return res.send("pong");
 });
-httpApp.use(express.static("www", { index: false }));
+
+httpApp.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, "www", "index.html"));
+});
+
+httpApp.get("/app", function(req, res) {
+  res.sendFile(path.join(__dirname, "www/app", "index.html"));
+});
 
 const httpServer = http.createServer(httpApp);
 bindWebSocket(httpServer);

@@ -1,4 +1,5 @@
-const wsUrl = window.location.href.replace("http", "ws").replace("index.html", "stream");
+// replace the current address with a websocket capable address
+const wsUrl = window.location.href.replace("http", "ws").replace(/(?:.(?!\/))+$/, "/stream");
 
 function generateFilter(sampleRate, cutoff, length) {
   if (length % 2 == 0) {

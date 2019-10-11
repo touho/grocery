@@ -89,9 +89,7 @@ class AppContextProvider extends Component {
   };
 
   onItemRemove = item => {
-    const modifiedList = this.state.finalItems.filter(
-      finalItem => finalItem.queryId !== item.queryId
-    );
+    const modifiedList = this.state.finalItems.filter(finalItem => finalItem.queryId !== item.queryId);
     this.setState({ finalItems: modifiedList, subViewItem: undefined });
   };
 
@@ -108,9 +106,7 @@ class AppContextProvider extends Component {
     let { subViewItem, finalItems } = this.state;
     subViewItem.selectedProduct = product;
 
-    let subViewItemIndexInFinalItems = finalItems.findIndex(
-      finalItem => finalItem.queryId === subViewItem.queryId
-    );
+    let subViewItemIndexInFinalItems = finalItems.findIndex(finalItem => finalItem.queryId === subViewItem.queryId);
     finalItems[subViewItemIndexInFinalItems] = subViewItem;
 
     this.setState({ finalItems, subViewOpen: !this.state.subViewOpen });
@@ -132,9 +128,7 @@ class AppContextProvider extends Component {
         break;
     }
     let { focusedItem, finalItems } = this.state;
-    let modifiedItemIndexInFinalItems = finalItems.findIndex(
-      finalItem => finalItem.queryId === focusedItem.queryId
-    );
+    let modifiedItemIndexInFinalItems = finalItems.findIndex(finalItem => finalItem.queryId === focusedItem.queryId);
     finalItems[modifiedItemIndexInFinalItems] = modifiedItem;
     this.setState({ finalItems });
   }
