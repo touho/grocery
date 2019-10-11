@@ -5,7 +5,8 @@ FROM node:12-slim
 
 WORKDIR /app
 COPY . .
-RUN npm install
+RUN npm install --unsafe-perm
+RUN npm run build
 
 EXPOSE 8080
 
