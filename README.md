@@ -1,6 +1,6 @@
 # Voice enabled food listing example for [Speechly](https://www.speechly.com/)
 
-The nodejs application in this repository features a complete example of a voice enabled meal tracking or food listing (e.g. grocery shopping) application power by a _backend integration_ to the Speechly API. The application uses the open source food and nutrition database [Fineli](https://fineli.fi/fineli/en/ohje/19), which contains information about 4 000 food items (with average nutrient contents) and is maintained by the Finnish National Institute for Health and Welfare. 
+The nodejs application in this repository features a complete example of a voice enabled meal tracking or food listing (e.g. grocery shopping) application power by a _backend integration_ to the Speechly API. The application uses the open source food and nutrition database [Fineli](https://fineli.fi/fineli/en/ohje/19), which contains information about 4 000 food items (with average nutrient contents) and is maintained by the Finnish National Institute for Health and Welfare.
 
 The natural language understanding (NLU) configuration on the backend supports amount, unit and food name combinations. Example things to try out:
 
@@ -12,20 +12,21 @@ NOTE: This is a more involved example. For a simple "hello world" tutorial, plea
 ## Features in this example
 
 - Simple web user interface, hosted at `/`
+- React.js application, built with `npx create-react-app`, hosted at `/app`
 - WebSocket connection between clients and this service
 - gRPC connection per client WebSocket to Speechly API
-- Querying Fineli nutrition data based using Speechly's NLU transcripts   
+- Querying Fineli nutrition data based using Speechly's NLU transcripts
 
 ## Requirements
 
-- node 12 or later 
+- node 12 or later
 - an application id from Speechly
 
 To get an application id apply to our beta program by sending an email to [appid@speechly.com](mailto:appid@speechly.com).
 
 ## Building and running the service
 
-Build the application 
+Build the application
 
     npm install
 

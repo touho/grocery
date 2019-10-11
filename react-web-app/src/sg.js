@@ -1,8 +1,6 @@
-const wsUrl = "ws://localhost:8080/stream";
-/*window.location.href
-  .replace("http", "ws")
-  .replace("index.html", "stream");
-*/
+// replace the current address with a websocket capable address
+const wsUrl = window.location.href.replace("http", "ws").replace(/(?:.(?!\/))+$/, "/stream");
+
 function generateFilter(sampleRate, cutoff, length) {
   if (length % 2 === 0) {
     throw Error("Filter length must be odd");
@@ -32,9 +30,7 @@ function downsampler(from) {
     inputBuffer.set(buffer, 0);
     inputBuffer.set(input, buffer.length);
 
-    let outputLength = Math.ceil(
-      (inputBuffer.length - filter.length) / sampleRatio
-    );
+    let outputLength = Math.ceil((inputBuffer.length - filter.length) / sampleRatio);
     let outputBuffer = new Float32Array(outputLength);
     for (let i = 0; i < outputLength; i++) {
       let offset = Math.round(sampleRatio * i);
@@ -72,11 +68,7 @@ export const SLU_STATE = {
 };
 
 export function slu() {
-  const context = {
-    ontranscription: () => {},
-    onstatus: status => {},
-    onstatechange: text => {}
-  };
+  const context = { ontranscription: () => {}, onstatus: status => {}, onstatechange: text => {} };
   const kStart = Symbol("start");
   const kStop = Symbol("stop");
   let ws = undefined;
@@ -129,19 +121,15 @@ export function slu() {
       return mic;
     };
 
-    return navigator.mediaDevices
-      .getUserMedia({ audio: true, video: false })
-      .then(handleSuccess);
+    return navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(handleSuccess);
   }
 
   function connect(mic) {
     const ds = downsampler(mic.context.sampleRate);
     // example when opening a language specific slu stream:
-    const languageCode = "en-US";
-    const ws = new WebSocket(
-      `${wsUrl}?sampleRate=16000&languageCode=${languageCode}`
-    );
-    //const ws = new WebSocket(`${wsUrl}?sampleRate=16000`)
+    // const languageCode = "en-US";
+    // const ws = new WebSocket(`${wsUrl}?sampleRate=16000&languageCode=${languageCode}`);
+    const ws = new WebSocket(`${wsUrl}?sampleRate=16000`);
     let timeoutHandle = undefined;
     let isRecording = false;
 
@@ -166,9 +154,7 @@ export function slu() {
 
     mic.onAudio = buffer => {
       if (isRecording) {
-        const buffer16 = convertToFloat32ToInt16(
-          ds(buffer.inputBuffer.getChannelData(0))
-        );
+        const buffer16 = convertToFloat32ToInt16(ds(buffer.inputBuffer.getChannelData(0)));
         ws.send(buffer16);
       }
     };
