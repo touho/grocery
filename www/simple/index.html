@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Grocery Web Example">
+  <link rel="apple-touch-icon" href="icon.png">
+  <head>
+    <style>
+      .button {
+        background-color: #4caf50;
+        border: solid 1px black;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .item {
+        padding: 10px;
+      }
+
+      .displayText {
+        float: left;
+      }
+
+      .transcript {
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="sg.js"></script>
+    <script type="application/javascript">
+      function ontranscription(data) {
+        const items = document.getElementById("items");
+        const utteranceId = data.utteranceId;
+        let utteranceDiv = document.getElementById(utteranceId);
+        if (!utteranceDiv) {
+          utteranceDiv = document.createElement("div");
+          utteranceDiv.setAttribute("id", utteranceId);
+          items.prepend(utteranceDiv);
+        }
+        if (data.segments.length > 0) {
+          utteranceDiv.innerHTML = "";
+          data.segments.forEach(segment => {
+            let product = segment.products[0];
+            const el = document.createElement("div");
+            el.setAttribute("class", "item");
+            if (product) {
+              el.innerHTML = `<div class="transcript">${segment.transcript}</div><div class="displayText">${product.amount} ${product.unitName} ${product.displayText}</div>`;
+            } else {
+              el.innerHTML = `<p class="transcript">${segment.transcript}</p>`;
+            }
+            utteranceDiv.prepend(el);
+          });
+        }
+      }
+
+      window.onload = function() {
+        const s = slu();
+        s.ontranscription = ontranscription;
+        s.onstatus = status => {
+          document.getElementById("status").innerHTML = status;
+        };
+        s.onstatechange = state => {
+          document.getElementById("record").innerHTML = state;
+        };
+        const recordDiv = document.getElementById("record");
+        recordDiv.addEventListener("mousedown", s.start);
+        recordDiv.addEventListener("mouseup", s.stop);
+        recordDiv.addEventListener("touchstart", s.start);
+        recordDiv.addEventListener("touchend", s.stop);
+      };
+    </script>
+    <div id="status"></div>
+    <div id="record" class="button">Connect</div>
+    <div id="items"></div>
+  </body>
+</html>

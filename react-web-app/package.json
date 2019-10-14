@@ -1,7 +1,7 @@
 {
   "name": "poc-list",
   "version": "0.1.0",
-  "homepage": "/app",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "eslint-config-prettier": "^6.3.0",

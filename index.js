@@ -444,10 +444,6 @@ httpApp.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "www", "index.html"));
 });
 
-httpApp.get("/app", function(req, res) {
-  res.sendFile(path.join(__dirname, "www/app", "index.html"));
-});
-
 const httpServer = http.createServer(httpApp);
 bindWebSocket(httpServer);
 
