@@ -10,10 +10,9 @@
     "start": "npm run build && node index.js",
     "postinstall": "npm run ui:install",
     "build": "npm run ui:build && npm run ui:deploy",
-    "ui:prepare": "mkdir -p www/app",
-    "ui:install": "npm run ui:prepare && npm --prefix ./react-web-app install",
+    "ui:install": "npm --prefix ./react-web-app install",
     "ui:build": "npm --prefix ./react-web-app run build",
-    "ui:deploy": "cp -r react-web-app/build/* www/app/"
+    "ui:deploy": "cp -r react-web-app/build/* www/"
   },
   "dependencies": {
     "@grpc/proto-loader": "^0.5.1",
