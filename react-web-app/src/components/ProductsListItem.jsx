@@ -10,7 +10,8 @@ export function ProductsListItem({
   onItemIncrease,
   onItemRemove,
   showFunctions = false,
-  isSelected = false
+  isSelected = false,
+  isSelectedProduct = false
 }) {
   const {
     amount = "",
@@ -21,7 +22,12 @@ export function ProductsListItem({
   } = product;
   return (
     product && (
-      <li className="list-item" key={productID}>
+      <li
+        className={`list-item ${
+          isSelectedProduct ? "list-item--selected" : ""
+        }`}
+        key={productID}
+      >
         <div
           className="list-item-main"
           onClick={event => {
@@ -44,7 +50,7 @@ export function ProductsListItem({
             {transcript && (
               <div className="list-item__info--utterance">{transcript}</div>
             )}
-            <div className="list-item__info--title">{displayText}</div>
+            <div className={"list-item__info--title"}>{displayText}</div>
           </div>
           <div className="list-item__quantity">
             {showFunctions && (

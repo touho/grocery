@@ -53,7 +53,11 @@ export default function ResultsList() {
                   <div>
                     {subViewItem.products.map(product => (
                       <ProductsListItem
-                        key={product.productID}
+                        isSelectedProduct={
+                          subViewItem.selectedProduct.productid ===
+                          product.productid
+                        }
+                        key={product.productid}
                         product={product}
                         onItemFocused={() => subViewItemSelected(product)}
                         onItemRemove={onItemRemove}

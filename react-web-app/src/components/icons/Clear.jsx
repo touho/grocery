@@ -1,7 +1,7 @@
 import React from "react";
 export const Clear = ({ onClear, disabled }) => (
   <button
-    className="mic"
+    className="function-button function-button__small"
     disabled={disabled}
     onClick={() => {
       if (window.confirm("This will clear your list. Are you sure?")) {

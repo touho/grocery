@@ -48,6 +48,9 @@ $mobile-padding: 15px;
     .list-item {
       display: flex;
       flex-direction: column;
+      &--selected {
+        border-left: 12px solid $accent-color;
+      }
       &-main {
         display: flex;
         font-family: "Lato", sans-serif;
@@ -139,21 +142,39 @@ $mobile-padding: 15px;
     justify-content: space-around;
     background-color: $theme-color;
     div {
-      width: 15%;
+      width: 25%;
       button {
         width: 100%;
         height: 100%;
         font-size: 5vh;
+        background: none;
+        border: none;
       }
     }
   }
 
-  .mic {
-    background: none;
-    border: none;
-    svg,
-    button {
+  .function-button {
+    svg {
       max-height: 75px;
+      transition: all 0.5s;
+      transition-timing-function: ease-in-out;
+    }
+    &__small {
+      svg {
+        max-height: 25px;
+      }
+    }
+
+    &__active {
+      svg {
+        fill: red;
+        max-height: 80px;
+      }
+      &-pressed {
+        svg {
+          max-height: 90px;
+        }
+      }
     }
   }
 }
