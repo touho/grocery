@@ -6,7 +6,14 @@ import { Clear } from "./components/icons/Clear";
 export default function FunctionButtons() {
   return (
     <AppContext.Consumer>
-      {({ startRecording, stopRecording, clearList, finalItems }) => (
+      {({
+        startRecording,
+        stopRecording,
+        clearList,
+        finalItems,
+        sluState,
+        addToCart
+      }) => (
         <footer>
           <div>
             <Clear
@@ -18,10 +25,14 @@ export default function FunctionButtons() {
             <Mic
               onMouseUp={event => stopRecording(event)}
               onMouseDown={event => startRecording(event)}
+              sluState={sluState}
             />
           </div>
           <div>
-            <AddToCart />
+            <AddToCart
+              disabled={!(finalItems && finalItems.length)}
+              onAdd={addToCart}
+            />
           </div>
         </footer>
       )}

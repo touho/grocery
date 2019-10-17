@@ -1,15 +1,16 @@
 import React, { Component } from "react";
+import { SLU_STATE } from "./../sg";
 
 const defaultState = {
   startRecording: () => {},
   stopRecording: () => {},
   toggleItemSubView: item => {},
   clearList: () => {},
+  addToCart: () => {},
   sluContext: {},
   finalItems: [],
   currentInterimItem: undefined,
-  sluStatus: undefined,
-  sluState: undefined,
+  sluState: SLU_STATE.notConnected,
   subViewItem: undefined,
   subViewOpen: false,
   focusedItem: undefined
@@ -56,11 +57,7 @@ class AppContextProvider extends Component {
         });
       }
     };
-    sluContext.onstatus = status => {
-      this.setState({
-        sluStatus: status
-      });
-    };
+
     sluContext.onstatechange = text => {
       this.setState({
         sluState: text
@@ -71,8 +68,10 @@ class AppContextProvider extends Component {
     });
   }
   startRecording = event => {
+    console.log("startRecording", event);
     try {
       this.state.sluContext.start(event);
+      this.setState({ subViewOpen: false });
     } catch (err) {
       console.error(err);
     }
@@ -85,11 +84,25 @@ class AppContextProvider extends Component {
     });
   };
 
-  stopRecording = event => this.state.sluContext.stop(event);
+  stopRecording = event => {
+    console.log("stopRecording", event);
+    this.setState({ subViewOpen: false });
+    this.state.sluContext.stop(event);
+  };
 
   clearList = () => {
-    this.setState({ finalItems: [] });
+    this.setState({ finalItems: [], subViewOpen: false });
     localStorage.removeItem("items");
+  };
+
+  addToCart = () => {
+    const selectedProductIds = this.state.finalItems
+      .map(fi => `${fi.selectedProduct.productid}`)
+      .join(",");
+    window.open(
+      `${process.env.REACT_APP_ECOM_URL}${selectedProductIds}`,
+      "new"
+    );
   };
 
   onItemRemove = item => {
@@ -151,6 +164,7 @@ class AppContextProvider extends Component {
           startRecording: this.startRecording,
           stopRecording: this.stopRecording,
           clearList: this.clearList,
+          addToCart: this.addToCart,
           toggleItemSubView: this.toggleItemSubView,
           subViewItemSelected: this.subViewItemSelected,
           onItemFocused: this.onItemFocused,
