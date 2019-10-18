@@ -16,6 +16,11 @@ if (appId === undefined) {
   throw new Error("APP_ID environment variable needs to be set");
 }
 
+// you can tune alpha between 0.0 - 1.0 to control how much
+// the product score influences which utterance alternative is selected
+const alpha = process.env.ALPHA ? parseFloat(process.env.ALPHA) : 0.1;
+console.log("alpha", alpha);
+
 const wavFilePath = process.env.RECORD_WAV;
 const isWavRecorderEnabled = !!wavFilePath;
 
@@ -158,10 +163,6 @@ const parseProductSegments = utteranceData => {
     findSegmentsWithProducts(alternative, language)
   );
   const scores = softMax(alternativeSegments.map(alt => alt.map(seg => seg.score).reduce((x, y) => x + y, 0.0)));
-
-  // you can tune alpha between 0.0 - 1.0 to control how much
-  // the product score influences which utterance alternative is selected
-  const alpha = 0.1;
   const bestSegments =
     alternativeSegments.length > 0
       ? alternativeSegments
