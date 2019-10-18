@@ -1,10 +1,16 @@
-$accent-color: #b5ce2f;
-$functions-color: #f3f3f3;
-$text-color: #666666;
+$accent-color: #a71931;
+$functions-color: #f2f3ef;
+$text-color: #333;
+$border-color: #333;
 $theme-color: #f6f4ef;
-$link-color: #877b59;
 $header-height: 100px;
 $mobile-padding: 15px;
+
+@font-face {
+  font-family: "BrixSlabRegular";
+  src: url("./brixslab-regular.woff");
+}
+
 .app {
   text-align: center;
   flex-direction: column;
@@ -53,10 +59,9 @@ $mobile-padding: 15px;
       }
       &-main {
         display: flex;
-        font-family: "Lato", sans-serif;
+        font-family: BrixSlabRegular, sans-serif;
         font-size: 15px;
-        font-weight: 700;
-        color: $link-color;
+        color: $text-color;
         padding: $mobile-padding;
       }
       &__info {
@@ -65,20 +70,22 @@ $mobile-padding: 15px;
         padding-left: 15px;
         &--utterance {
           display: inline-block;
+          color: white;
           margin-bottom: 10px;
           padding: 6px;
           font-size: 12px;
-          background-color: $theme-color;
+          background-color: $accent-color;
           border-radius: 10px;
         }
       }
       &__quantity {
         button {
-          width: 50px;
+          width: 80px;
           height: 100%;
           font-size: 14px;
-          background: $functions-color;
-          border: none;
+          background: white;
+          border: 1px solid $border-color;
+          margin-right: -15px;
         }
       }
       &-functions {
@@ -88,19 +95,19 @@ $mobile-padding: 15px;
         width: 100%;
         display: flex;
         transition: all 0.2s;
+        transition-timing-function: ease-in-out;
         button {
           visibility: hidden;
         }
         &__selected {
-          transition-timing-function: ease-in-out;
           display: flex;
           height: 75px;
           button {
             visibility: visible;
             font-size: 26px;
             width: 100%;
-            background-color: $functions-color;
-            border: 1px solid $theme-color;
+            background-color: white;
+            border: 1px solid $border-color;
             svg {
               width: 20px;
             }
@@ -111,7 +118,6 @@ $mobile-padding: 15px;
       &-img {
         flex-basis: 140px;
         &__bg {
-          border-radius: 50%;
           box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.18);
         }
       }
@@ -155,6 +161,7 @@ $mobile-padding: 15px;
 
   .function-button {
     svg {
+      fill: #333;
       max-height: 75px;
       transition: all 0.5s;
       transition-timing-function: ease-in-out;
@@ -167,10 +174,10 @@ $mobile-padding: 15px;
 
     &__active {
       svg {
-        fill: red;
         max-height: 80px;
       }
       &-pressed {
+        fill: $accent-color;
         svg {
           max-height: 90px;
         }

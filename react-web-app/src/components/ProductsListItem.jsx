@@ -16,7 +16,7 @@ export function ProductsListItem({
   const {
     amount = "",
     displayText = "",
-    measureName = "",
+    unitName = "",
     imageUrl,
     productID
   } = product;
@@ -62,7 +62,7 @@ export function ProductsListItem({
                   }
                 }}
               >
-                {amount} {measureName}
+                {amount} {unitName}
               </button>
             )}
           </div>

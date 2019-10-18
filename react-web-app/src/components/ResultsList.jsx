@@ -8,7 +8,7 @@ export default function ResultsList() {
       <AppContext.Consumer>
         {({
           finalItems,
-          currentInterimItem,
+          currentInterimItems,
           focusedItem,
           toggleItemSubView,
           subViewOpen,
@@ -29,7 +29,7 @@ export default function ResultsList() {
             <>
               <div className={listClass}>
                 <div className={"results--list"}>
-                  {[currentInterimItem, ...finalItems]
+                  {[...currentInterimItems, ...finalItems]
                     .filter(Boolean)
                     .map(listItem => (
                       <ResultsListItem
