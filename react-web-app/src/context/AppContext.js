@@ -1,6 +1,14 @@
 import React, { Component } from "react";
 import { SLU_STATE } from "./../sg";
 
+const applySelectedProduct = segments =>
+  segments.map(sg => {
+    return {
+      ...sg,
+      selectedProduct: sg.products.length && sg.products[0]
+    };
+  });
+
 const defaultState = {
   startRecording: () => {},
   stopRecording: () => {},
@@ -9,12 +17,13 @@ const defaultState = {
   addToCart: () => {},
   sluContext: {},
   finalItems: [],
-  currentInterimItem: undefined,
+  currentInterimItems: [],
   sluState: SLU_STATE.notConnected,
   subViewItem: undefined,
   subViewOpen: false,
   focusedItem: undefined
 };
+
 const AppContext = React.createContext(defaultState);
 class AppContextProvider extends Component {
   state = defaultState;
@@ -29,22 +38,12 @@ class AppContextProvider extends Component {
 
     sluContext.ontranscription = data => {
       const { type, segments } = data;
-      const segment = segments[0];
       if (type === "interimItem") {
-        segment.selectedProduct = {};
-        if (segment.products && segment.products.length > 0) {
-          segment.selectedProduct = segment.products[0];
-        }
         this.setState({
-          currentInterimItem: segment
+          currentInterimItems: applySelectedProduct(segments)
         });
       } else if (type === "finalItem") {
-        const modifiedSegments = segments.map(sg => {
-          return {
-            ...sg,
-            selectedProduct: sg.products[0]
-          };
-        });
+        const modifiedSegments = applySelectedProduct(segments);
         console.log("on transcript modified segments", modifiedSegments);
         const finalItemsModified = [
           ...modifiedSegments,
@@ -53,7 +52,7 @@ class AppContextProvider extends Component {
         localStorage.setItem("items", JSON.stringify(finalItemsModified));
         this.setState({
           finalItems: finalItemsModified,
-          currentInterimItem: undefined
+          currentInterimItems: []
         });
       }
     };
@@ -116,10 +115,15 @@ class AppContextProvider extends Component {
 
   onItemDecrease = item => this.modifyListItemWithOperation(item, "decrease");
 
-  onItemFocused = item =>
+  onItemFocused = item => {
     this.setState({
-      focusedItem: item
+      focusedItem:
+        this.state.focusedItem &&
+        this.state.focusedItem.queryId === item.queryId
+          ? null
+          : item //toggles or switches bbetween items
     });
+  };
 
   subViewItemSelected = product => {
     let { subViewItem, finalItems } = this.state;

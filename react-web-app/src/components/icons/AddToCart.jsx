@@ -3,11 +3,7 @@ export const AddToCart = ({ onAdd, disabled }) => (
   <button
     disabled={disabled}
     onClick={() => {
-      if (
-        window.confirm(
-          "This will add your items to your cart and redirect. Are you sure?"
-        )
-      ) {
+      if (window.confirm("Add these items to your trolley?")) {
         onAdd();
       }
     }}
