@@ -12,11 +12,13 @@ export const listItemBackgroundStyle = imageUrl => {
 export function ResultsListItem({
   item,
   isSelected,
+  isHovered,
   onItemSelected,
   onItemRemove,
   onItemDecrease,
   onItemIncrease,
-  onItemFocused
+  onItemFocused,
+  onItemHovered
 }) {
   const { transcript, selectedProduct } = item;
 
@@ -29,8 +31,10 @@ export function ResultsListItem({
         onItemDecrease={onItemDecrease}
         onItemIncrease={onItemIncrease}
         onItemSelected={onItemSelected}
+        onItemHovered={onItemHovered}
         onItemFocused={() => onItemFocused()}
         isSelected={isSelected}
+        isHoveredProduct={isHovered}
         showFunctions={true}
       />
     )

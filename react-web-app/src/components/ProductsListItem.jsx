@@ -1,17 +1,20 @@
 import React from "react";
 import { listItemBackgroundStyle } from "./ResultsListItem";
 import { Trash } from "./icons/Trash";
+import classNames from 'classnames'
 export function ProductsListItem({
   product,
   transcript,
   onItemSelected,
+  onItemHovered,
   onItemFocused,
   onItemDecrease,
   onItemIncrease,
   onItemRemove,
   showFunctions = false,
   isSelected = false,
-  isSelectedProduct = false
+  isSelectedProduct = false,
+  isHoveredProduct = false
 }) {
   const {
     amount = "",
@@ -20,16 +23,33 @@ export function ProductsListItem({
     imageUrl,
     productID
   } = product;
+  const itemClassName = classNames(
+    "list-item",
+    {
+      "list-item--selected":
+      isSelectedProduct
+    },
+    {
+      "list-item--hovered":
+      isHoveredProduct && !isSelectedProduct
+    }
+  );
   return (
     product && (
       <li
-        className={`list-item ${
-          isSelectedProduct ? "list-item--selected" : ""
-        }`}
+        className={itemClassName}
         key={productID}
       >
         <div
           className="list-item-main"
+          onMouseOver={event => {
+            if (
+              onItemHovered &&
+              event.target.className !== "list-item-open-functions"
+            ) {
+              onItemHovered(product);
+            }
+          }}
           onClick={event => {
             if (
               event.target.className !== "" &&
