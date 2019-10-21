@@ -14,7 +14,9 @@ $mobile-padding: 15px;
 .app {
   text-align: center;
   flex-direction: column;
+  display: flex;
   height: 100vh;
+  align-items: center;
   header {
     background-color: $accent-color;
     height: $header-height;
@@ -51,11 +53,17 @@ $mobile-padding: 15px;
     overflow: hidden;
     position: absolute;
     top: 0px;
+    max-width: 680px;
+
     .list-item {
       display: flex;
       flex-direction: column;
+      border-left: 12px solid white;
       &--selected {
         border-left: 12px solid $accent-color;
+      }
+      &--hovered {
+        border-left: 12px solid $functions-color;
       }
       &-main {
         display: flex;
@@ -128,6 +136,7 @@ $mobile-padding: 15px;
     width: 100vw;
     position: absolute;
     height: calc(100% - 200px);
+    max-width: 680px;
     top: 100px;
     z-index: 2;
     right: 0vw;
@@ -135,6 +144,28 @@ $mobile-padding: 15px;
     transition-timing-function: ease-in-out;
     &--transitionoffset {
       right: -100vw;
+    }
+
+    &__product-info {
+      @media only screen and (min-device-width : 769px) and (max-device-width : 1025px) {
+        display:none;
+      }
+      @media only screen and (max-height: 1000px) {
+        display:none;
+      }
+      margin: 20px;
+      text-align: left;
+      border-bottom: 1px solid silver;
+      display: flex;
+      h1 {
+        min-height: 90px;
+      }
+      &__text {
+        padding-left: 20px;
+      }
+      img {
+        height: 20vh;
+      }
     }
   }
 

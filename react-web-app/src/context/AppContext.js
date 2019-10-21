@@ -21,7 +21,8 @@ const defaultState = {
   sluState: SLU_STATE.notConnected,
   subViewItem: undefined,
   subViewOpen: false,
-  focusedItem: undefined
+  focusedItem: undefined,
+  hoveredProduct: undefined
 };
 
 const AppContext = React.createContext(defaultState);
@@ -125,6 +126,13 @@ class AppContextProvider extends Component {
     });
   };
 
+  onItemHovered = product => {
+    console.log(product)
+    this.setState({
+      hoveredProduct: product
+    });
+  };
+
   subViewItemSelected = product => {
     let { subViewItem, finalItems } = this.state;
     subViewItem.selectedProduct = product;
@@ -174,7 +182,8 @@ class AppContextProvider extends Component {
           onItemFocused: this.onItemFocused,
           onItemRemove: this.onItemRemove,
           onItemDecrease: this.onItemDecrease,
-          onItemIncrease: this.onItemIncrease
+          onItemIncrease: this.onItemIncrease,
+          onItemHovered: this.onItemHovered
         }}
       >
         {this.props.children}
