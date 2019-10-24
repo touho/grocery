@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { AppContextProvider } from "./context/AppContext";
-import "./App.scss";
-import Header from "./Header";
-import FunctionButtons from "./FunctionButtons";
-import ResultsList from "./components/ResultsList";
-import * as SLUFunctions from "./sg";
+import React, { Component } from 'react'
+import { AppContextProvider } from './context/AppContext'
+import './App.scss'
+import Header from './Header'
+import FunctionButtons from './FunctionButtons'
+import ResultsList from './components/ResultsList'
+import * as SLUFunctions from './sg'
 class App extends Component {
   render() {
     return (
@@ -15,8 +15,8 @@ class App extends Component {
           <FunctionButtons />
         </div>
       </AppContextProvider>
-    );
+    )
   }
 }
 
-export default App;
+export default App

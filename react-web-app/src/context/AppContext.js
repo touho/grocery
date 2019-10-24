@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { SLU_STATE } from "./../sg";
+import React, { Component } from 'react'
+import { SLU_STATE } from './../sg'
 
 const applySelectedProduct = segments =>
   segments.map(sg => {
     return {
       ...sg,
-      selectedProduct: sg.products.length && sg.products[0]
-    };
-  });
+      selectedProduct: sg.products.length ? sg.products[0] : {}
+    }
+  })
 
 const defaultState = {
   startRecording: () => {},
@@ -23,98 +23,109 @@ const defaultState = {
   subViewOpen: false,
   focusedItem: undefined,
   hoveredProduct: undefined
-};
+}
 
-const AppContext = React.createContext(defaultState);
+const AppContext = React.createContext(defaultState)
 class AppContextProvider extends Component {
-  state = defaultState;
+  state = defaultState
   componentDidMount() {
-    const itemsInStorageJSON = localStorage.getItem("items");
+    const itemsInStorageJSON = localStorage.getItem('items')
     if (itemsInStorageJSON) {
-      const itemsInStorage = JSON.parse(itemsInStorageJSON);
-      this.setState({ finalItems: itemsInStorage });
+      const itemsInStorage = JSON.parse(itemsInStorageJSON)
+      this.setState({ finalItems: itemsInStorage })
     }
 
-    let sluContext = this.props.sluContext;
+    let sluContext = this.props.sluContext
 
     sluContext.ontranscription = data => {
-      const { type, segments } = data;
-      if (type === "interimItem") {
+      const { type, segments } = data
+      if (type === 'interimItem') {
         this.setState({
           currentInterimItems: applySelectedProduct(segments)
-        });
-      } else if (type === "finalItem") {
-        const modifiedSegments = applySelectedProduct(segments);
-        console.log("on transcript modified segments", modifiedSegments);
+        })
+      } else if (type === 'finalItem') {
+        const modifiedSegments = applySelectedProduct(segments)
+        console.log(
+          'on transcript modified segments',
+          modifiedSegments
+        )
         const finalItemsModified = [
           ...modifiedSegments,
           ...this.state.finalItems
-        ];
-        localStorage.setItem("items", JSON.stringify(finalItemsModified));
+        ]
+        localStorage.setItem(
+          'items',
+          JSON.stringify(finalItemsModified)
+        )
         this.setState({
           finalItems: finalItemsModified,
           currentInterimItems: []
-        });
+        })
       }
-    };
+    }
 
     sluContext.onstatechange = text => {
       this.setState({
         sluState: text
-      });
-    };
+      })
+    }
     this.setState({
       sluContext
-    });
+    })
   }
   startRecording = event => {
-    console.log("startRecording", event);
+    console.log('startRecording', event)
     try {
-      this.state.sluContext.start(event);
-      this.setState({ subViewOpen: false });
+      this.state.sluContext.start(event)
+      this.setState({ subViewOpen: false })
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
+  }
 
   toggleItemSubView = item => {
     this.setState({
       subViewItem: item,
       subViewOpen: !this.state.subViewOpen
-    });
-  };
+    })
+  }
 
   stopRecording = event => {
-    console.log("stopRecording", event);
-    this.setState({ subViewOpen: false });
-    this.state.sluContext.stop(event);
-  };
+    console.log('stopRecording', event)
+    this.setState({ subViewOpen: false })
+    this.state.sluContext.stop(event)
+  }
 
   clearList = () => {
-    this.setState({ finalItems: [], subViewOpen: false });
-    localStorage.removeItem("items");
-  };
+    this.setState({ finalItems: [], subViewOpen: false })
+    localStorage.removeItem('items')
+  }
 
   addToCart = () => {
     const selectedProductIds = this.state.finalItems
       .map(fi => `${fi.selectedProduct.productid}`)
-      .join(",");
+      .join(',')
     window.open(
       `${process.env.REACT_APP_ECOM_URL}${selectedProductIds}`,
-      "new"
-    );
-  };
+      'new'
+    )
+  }
 
   onItemRemove = item => {
     const modifiedList = this.state.finalItems.filter(
       finalItem => finalItem.queryId !== item.queryId
-    );
-    this.setState({ finalItems: modifiedList, subViewItem: undefined });
-  };
+    )
+    this.setState({
+      finalItems: modifiedList,
+      subViewItem: undefined
+    })
+  }
 
-  onItemIncrease = item => this.modifyListItemWithOperation(item, "increase");
+  onItemIncrease = item =>
+    this.modifyListItemWithOperation(item, 'increase')
 
-  onItemDecrease = item => this.modifyListItemWithOperation(item, "decrease");
+  onItemDecrease = item =>
+    this.modifyListItemWithOperation(item, 'decrease')
 
   onItemFocused = item => {
     this.setState({
@@ -123,49 +134,52 @@ class AppContextProvider extends Component {
         this.state.focusedItem.queryId === item.queryId
           ? null
           : item //toggles or switches bbetween items
-    });
-  };
+    })
+  }
 
   onItemHovered = product => {
     console.log(product)
     this.setState({
       hoveredProduct: product
-    });
-  };
+    })
+  }
 
   subViewItemSelected = product => {
-    let { subViewItem, finalItems } = this.state;
-    subViewItem.selectedProduct = product;
+    let { subViewItem, finalItems } = this.state
+    subViewItem.selectedProduct = product
 
     let subViewItemIndexInFinalItems = finalItems.findIndex(
       finalItem => finalItem.queryId === subViewItem.queryId
-    );
-    finalItems[subViewItemIndexInFinalItems] = subViewItem;
+    )
+    finalItems[subViewItemIndexInFinalItems] = subViewItem
 
-    this.setState({ finalItems, subViewOpen: !this.state.subViewOpen });
-    localStorage.setItem("items", JSON.stringify(finalItems));
-  };
+    this.setState({
+      finalItems,
+      subViewOpen: !this.state.subViewOpen
+    })
+    localStorage.setItem('items', JSON.stringify(finalItems))
+  }
 
   modifyListItemWithOperation(item, operation) {
-    let modifiedItem = { ...item };
+    let modifiedItem = { ...item }
     switch (operation) {
-      case "increase":
-        modifiedItem.selectedProduct.amount++;
-        break;
-      case "decrease":
+      case 'increase':
+        modifiedItem.selectedProduct.amount++
+        break
+      case 'decrease':
         if (modifiedItem.selectedProduct.amount > 0) {
-          modifiedItem.selectedProduct.amount--;
+          modifiedItem.selectedProduct.amount--
         }
-        break;
+        break
       default:
-        break;
+        break
     }
-    let { focusedItem, finalItems } = this.state;
+    let { focusedItem, finalItems } = this.state
     let modifiedItemIndexInFinalItems = finalItems.findIndex(
       finalItem => finalItem.queryId === focusedItem.queryId
-    );
-    finalItems[modifiedItemIndexInFinalItems] = modifiedItem;
-    this.setState({ finalItems });
+    )
+    finalItems[modifiedItemIndexInFinalItems] = modifiedItem
+    this.setState({ finalItems })
   }
 
   render() {
@@ -188,9 +202,9 @@ class AppContextProvider extends Component {
       >
         {this.props.children}
       </AppContext.Provider>
-    );
+    )
   }
 }
 
-export default AppContext;
-export { AppContextProvider };
+export default AppContext
+export { AppContextProvider }
