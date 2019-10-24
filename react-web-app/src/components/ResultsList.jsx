@@ -1,7 +1,7 @@
-import React from "react";
-import AppContext from "../context/AppContext";
-import { ResultsListItem } from "./ResultsListItem";
-import { ProductsListItem } from "./ProductsListItem";
+import React from 'react'
+import AppContext from '../context/AppContext'
+import { ResultsListItem } from './ResultsListItem'
+import { ProductsListItem } from './ProductsListItem'
 export default function ResultsList() {
   return (
     <main>
@@ -22,17 +22,18 @@ export default function ResultsList() {
           hoveredProduct
         }) => {
           const listClass = `results  ${
-            subViewOpen ? "results--transitionoffset" : ""
-          }`;
+            subViewOpen ? 'results--transitionoffset' : ''
+          }`
           const subViewClass = `subview  ${
-            !subViewOpen ? "subview--transitionoffset" : ""
-          }`;
+            !subViewOpen ? 'subview--transitionoffset' : ''
+          }`
           const infoProduct =
-            hoveredProduct || (subViewItem && subViewItem.selectedProduct);
+            hoveredProduct ||
+            (subViewItem && subViewItem.selectedProduct)
           return (
             <>
               <div className={listClass}>
-                <div className={"results--list"}>
+                <div className={'results--list'}>
                   {[...currentInterimItems, ...finalItems]
                     .filter(Boolean)
                     .map(listItem => (
@@ -43,26 +44,35 @@ export default function ResultsList() {
                           listItem.queryId === focusedItem.queryId
                         }
                         isHovered={
-                          hoveredProduct && 
-                          listItem.selectedProduct.productid === hoveredProduct.productid
+                          hoveredProduct &&
+                          listItem.selectedProduct &&
+                          listItem.selectedProduct.productid ===
+                            hoveredProduct.productid
                         }
                         item={listItem}
                         onItemFocused={() => onItemFocused(listItem)}
                         onItemRemove={() => onItemRemove(listItem)}
-                        onItemDecrease={() => onItemDecrease(listItem)}
-                        onItemIncrease={() => onItemIncrease(listItem)}
-                        onItemSelected={() => toggleItemSubView(listItem)}
-                        onItemHovered={() => onItemHovered(listItem.selectedProduct)}
-                        
+                        onItemDecrease={() =>
+                          onItemDecrease(listItem)
+                        }
+                        onItemIncrease={() =>
+                          onItemIncrease(listItem)
+                        }
+                        onItemSelected={() =>
+                          toggleItemSubView(listItem)
+                        }
+                        onItemHovered={() =>
+                          onItemHovered(listItem.selectedProduct)
+                        }
                       />
                     ))}
                 </div>
               </div>
               <div className={subViewClass}>
                 {subViewItem && (
-                  <div>
+                  <div className="subview__innercontainer">
                     <div className="subview__product-info">
-                      <img src={infoProduct.imageUrl}/>
+                      <img src={infoProduct.imageUrl} />
                       <div className="subview__product-info__text">
                         <h1>{infoProduct.displayText}</h1>
                         <p>
@@ -77,16 +87,21 @@ export default function ResultsList() {
                           product.productid
                         }
                         isHoveredProduct={
-                          hoveredProduct && hoveredProduct.productid ===
-                          product.productid
+                          hoveredProduct &&
+                          hoveredProduct.productid ===
+                            product.productid
                         }
                         key={product.productid}
                         product={product}
-                        onItemFocused={() => subViewItemSelected(product)}
+                        onItemFocused={() =>
+                          subViewItemSelected(product)
+                        }
                         onItemRemove={onItemRemove}
                         onItemDecrease={onItemDecrease}
                         onItemIncrease={onItemIncrease}
-                        onItemSelected={() => subViewItemSelected(product)}
+                        onItemSelected={() =>
+                          subViewItemSelected(product)
+                        }
                         onItemHovered={() => onItemHovered(product)}
                       />
                     ))}
@@ -94,9 +109,9 @@ export default function ResultsList() {
                 )}
               </div>
             </>
-          );
+          )
         }}
       </AppContext.Consumer>
     </main>
-  );
+  )
 }

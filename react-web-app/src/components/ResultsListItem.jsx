@@ -1,14 +1,14 @@
-import React from "react";
-import { ProductsListItem } from "./ProductsListItem";
+import React from 'react'
+import { ProductsListItem } from './ProductsListItem'
 export const listItemBackgroundStyle = imageUrl => {
   return {
     backgroundImage: `url(${imageUrl})`,
-    backgroundPosition: "center",
-    backgroundSize: "110px",
-    width: "75px",
-    height: "75px"
-  };
-};
+    backgroundPosition: 'center',
+    backgroundSize: '110px',
+    width: '75px',
+    height: '75px'
+  }
+}
 export function ResultsListItem({
   item,
   isSelected,
@@ -20,7 +20,7 @@ export function ResultsListItem({
   onItemFocused,
   onItemHovered
 }) {
-  const { transcript, selectedProduct } = item;
+  const { transcript, selectedProduct } = item
 
   return (
     selectedProduct && (
@@ -38,5 +38,5 @@ export function ResultsListItem({
         showFunctions={true}
       />
     )
-  );
+  )
 }

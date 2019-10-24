@@ -1,8 +1,8 @@
-import React from "react";
-import AppContext from "./context/AppContext";
-import { Mic } from "./components/icons/Mic";
-import { AddToCart } from "./components/icons/AddToCart";
-import { Clear } from "./components/icons/Clear";
+import React from 'react'
+import AppContext from './context/AppContext'
+import { Mic } from './components/icons/Mic'
+import { AddToCart } from './components/icons/AddToCart'
+import { Clear } from './components/icons/Clear'
 export default function FunctionButtons() {
   return (
     <AppContext.Consumer>
@@ -37,5 +37,5 @@ export default function FunctionButtons() {
         </footer>
       )}
     </AppContext.Consumer>
-  );
+  )
 }
