@@ -2,11 +2,7 @@ import React from 'react'
 import { ProductsListItem } from './ProductsListItem'
 export const listItemBackgroundStyle = imageUrl => {
   return {
-    backgroundImage: `url(${imageUrl})`,
-    backgroundPosition: 'center',
-    backgroundSize: '110px',
-    width: '75px',
-    height: '75px'
+    backgroundImage: `url(${imageUrl})`
   }
 }
 export function ResultsListItem({

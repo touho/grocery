@@ -3,6 +3,7 @@ import AppContext from './context/AppContext'
 import { Mic } from './components/icons/Mic'
 import { AddToCart } from './components/icons/AddToCart'
 import { Clear } from './components/icons/Clear'
+import { Back } from './components/icons/Back'
 export default function FunctionButtons() {
   return (
     <AppContext.Consumer>
@@ -12,14 +13,23 @@ export default function FunctionButtons() {
         clearList,
         finalItems,
         sluState,
-        addToCart
+        addToCart,
+        subViewOpen,
+        toggleItemSubView
       }) => (
         <footer>
           <div>
-            <Clear
-              disabled={!(finalItems && finalItems.length)}
-              onClear={clearList}
-            />
+            {subViewOpen ? (
+              <Back
+                disabled={!(finalItems && finalItems.length)}
+                onBack={() => toggleItemSubView(null)}
+              />
+            ) : (
+              <Clear
+                disabled={!(finalItems && finalItems.length)}
+                onClear={clearList}
+              />
+            )}
           </div>
           <div>
             <Mic
