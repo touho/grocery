@@ -41,10 +41,14 @@ class AppContextProvider extends Component {
       const { type, segments } = data
       if (type === 'interimItem') {
         this.setState({
-          currentInterimItems: applySelectedProduct(segments)
+          currentInterimItems: applySelectedProduct(
+            segments
+          ).reverse()
         })
       } else if (type === 'finalItem') {
-        const modifiedSegments = applySelectedProduct(segments)
+        const modifiedSegments = applySelectedProduct(
+          segments
+        ).reverse()
         console.log(
           'on transcript modified segments',
           modifiedSegments
