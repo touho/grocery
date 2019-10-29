@@ -15,6 +15,7 @@ $mobile-padding: 15px;
 
 body {
   font-family: 'BrixSlabRegular';
+  overflow: hidden;
 }
 
 h1 {
@@ -31,9 +32,7 @@ h1 {
     background-color: $accent-color;
     height: $header-height;
     width: 100%;
-    position: absolute;
-    top: 0px;
-    overflow: hidden;
+    flex-shrink: 0;
   }
 
   .results {
@@ -46,28 +45,22 @@ h1 {
       left: -100vw;
     }
     &--list {
+      overflow: hidden;
       position: relative;
-      margin-bottom: 150px;
       @media only screen and (min-width: 768px) {
         padding-right: 20px;
       }
     }
     overflow-x: hidden;
     overflow-y: scroll;
-    position: relative;
-    top: 100px;
   }
 
   main {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    position: absolute;
-    top: 0px;
+    flex-grow: 1;
+    overflow: auto;
     max-width: 1024px;
-
+    display: flex;
+    width: 100%;
     .list-item {
       display: flex;
       flex-direction: column;
@@ -169,21 +162,19 @@ h1 {
 
   .subview {
     width: 100vw;
-    position: absolute;
+    background-color: white;
+    position: fixed;
     height: 100vh;
     max-width: 1024px;
     top: 100px;
-    right: 0vw;
-    transition: right 0.2s;
+    transition: transform 0.2s;
     transition-timing-function: ease-in-out;
     overflow-y: scroll;
     &__innercontainer {
-      position: relative;
-      bottom: 0px;
       padding-bottom: 150px;
     }
     &--transitionoffset {
-      right: -100vw;
+      transform: translateX(100vw);
     }
 
     &__product-info {
@@ -210,13 +201,12 @@ h1 {
   }
 
   footer {
-    position: absolute;
-    bottom: 0px;
-    overflow: hidden;
+    flex-shrink: 0;
     width: 100%;
     height: 10vh;
     display: flex;
     justify-content: space-around;
+    z-index: 2;
     background-color: $theme-color;
     div {
       width: 25%;
