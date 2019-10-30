@@ -18,7 +18,7 @@ const product = Joi.object().keys({
   tags: Joi.object(),
   popularity: Joi.number(),
   category: Joi.string(),
-  brand: Joi.string().allow(null),
+  brand: Joi.string().allow(""),
   tokenScores: Joi.object().pattern(/.*/, Joi.array().items(tokenScore)),
   displayText: Joi.string(),
   amount: Joi.number(),
@@ -27,7 +27,7 @@ const product = Joi.object().keys({
 
 const segment = Joi.object().keys({
   transcript: Joi.string(),
-  query: Joi.string(),
+  query: Joi.string().allow(""),
   normalizedQuery: Joi.string(),
   products: Joi.array().items(product),
   queryId: Joi.string(),
