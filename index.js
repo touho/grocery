@@ -8,9 +8,10 @@ const grpc = require("grpc");
 const crypto = require("crypto");
 const wav = require("wav");
 const path = require("path");
-
+const schema = require("./schema");
 const logger = console;
 
+const shouldEnforceSchema = process.env.ASSERT_SCHEMA == "true";
 const appId = process.env.APP_ID;
 if (appId === undefined) {
   throw new Error("APP_ID environment variable needs to be set");
@@ -57,11 +58,11 @@ const errors = {
 
 const processError = websocket => error => {
   if (websocket.readyState === 1) {
-    if (error.code == 11) {
+    if (error && error.code == 11) {
       logger.error(error.details);
       return;
     }
-    logger.error(error);
+    logger.error("Error caught:", error);
     logger.error("Sending error message to client...");
     websocket.send(JSON.stringify({ event: "error", data: { error: error.message, code: "G01" } }));
     logger.error("Closing websocket...");
@@ -222,6 +223,19 @@ class WavWriter {
 }
 
 const processData = (websocket, wavWriter) => {
+  const send = (obj) => {
+    try {
+      if (shouldEnforceSchema) {
+        schema.assert(obj);
+      }
+      websocket.send(JSON.stringify(obj));
+    } catch (err) {
+      if (err.details) {
+        return processError(websocket)(err.details);
+      }
+      processError(websocket)(err);
+    }
+  };
   return data => {
     if (websocket.readyState !== 1) {
       // client websocket is not writable, ignore result
@@ -229,24 +243,18 @@ const processData = (websocket, wavWriter) => {
     }
     if (data.started !== undefined) {
       // slu api returns an utterance id
-      websocket.send(JSON.stringify({ event: "started", data: data.started }));
+      send({ event: "started", data: data.started });
       wavWriter.start(data.started.utteranceId);
     } else if (data.finished !== undefined) {
-      websocket.send(JSON.stringify({ event: "stopped", data: data.finished }));
+      send({ event: "stopped", data: data.finished });
       wavWriter.stop(data.finished.utteranceId);
     } else {
       const productSegments = parseProductSegments(data.utterance);
       if (websocket.readyState === 1 && !R.isEmpty(productSegments)) {
-        try {
-          websocket.send(
-            JSON.stringify({
-              event: "transcription",
-              data: { utteranceId: data.utterance.utteranceId, type: data.utterance.type, segments: productSegments }
-            })
-          );
-        } catch (err) {
-          processError(websocket)(err);
-        }
+        send({
+          event: "transcription",
+          data: { utteranceId: data.utterance.utteranceId, type: data.utterance.type, segments: productSegments }
+        });
       }
     }
   };
