@@ -31,7 +31,7 @@ if (process.env.SG_API_URL) {
   sgApiUrl = process.env.SG_API_URL;
   creds = grpc.credentials.createInsecure();
 } else {
-  sgApiUrl = "api.speechgrinder.com";
+  sgApiUrl = "api.speechly.com";
   creds = grpc.credentials.createSsl();
 }
 
