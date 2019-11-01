@@ -12,7 +12,7 @@ yarn
 
 REACT_APP_ECOM_URL="https://myecomurl.com/" APP_ID=INSERT_YOUR_APP_ID_HERE yarn start:server
 
-yarn start:ui
+HTTPS=true yarn start
 
 ```
 
