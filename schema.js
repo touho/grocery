@@ -28,7 +28,7 @@ const product = Joi.object().keys({
 const segment = Joi.object().keys({
   transcript: Joi.string(),
   query: Joi.string().allow(""),
-  normalizedQuery: Joi.string(),
+  normalizedQuery: Joi.string().allow(""),
   products: Joi.array().items(product),
   queryId: Joi.string(),
   score: Joi.number()
