@@ -33,8 +33,8 @@ export default function FunctionButtons() {
           </div>
           <div>
             <Mic
-              onMouseUp={event => stopRecording(event)}
-              onMouseDown={event => startRecording(event)}
+              onUp={event => stopRecording(event)}
+              onDown={event => startRecording(event)}
               sluState={sluState}
             />
           </div>
