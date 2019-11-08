@@ -1,27 +1,27 @@
-# Voice enabled food listing example
+# Voice enabled food listing example for [Speechly](https://www.speechly.com/)
 
-The nodejs application in this repository features a complete example of a voice enabled meal tracking or food listing (e.g. grocery shopping) application power by a _backend integration_ to the Speechgrinder API. The application uses the open source food and nutrition database [Fineli](https://fineli.fi/fineli/en/ohje/19), which contains information about 4 000 food items (with average nutrient contents) and is maintained by the Finnish National Institute for Health and Welfare. 
+The nodejs application in this repository features a complete example of a voice enabled meal tracking or food listing (e.g. grocery shopping) application power by a _backend integration_ to the Speechly API. The application uses the open source food and nutrition database [Fineli](https://fineli.fi/fineli/en/ohje/19), which contains information about 4 000 food items (with average nutrient contents) and is maintained by the Finnish National Institute for Health and Welfare. 
 
 The natural language understanding (NLU) configuration on the backend supports amount, unit and food name combinations. Example things to try out:
 
 - three liters of milk
 - pears, rye bread, 2 kilos of potatoes
 
-NOTE: This is a more involved example. For a simple "hello world" tutorial, please refer to [the start repository](https://github.com/speechgrinder/start).
+NOTE: This is a more involved example. For a simple "hello world" tutorial, please refer to [the start repository](https://github.com/speechly/start). If you have no idea on what Speechly is, you can start [here](https://www.speechly.com/blog/what-is-speechly/) or our website [frontpage](https://www.speechly.com/).
 
 ## Features in this example
 
 - Simple web user interface, hosted at `/`
 - WebSocket connection between clients and this service
-- gRPC connection per client WebSocket to Speechgrinder API
-- Querying Fineli nutrition data based using Speechgrinder's NLU transcripts   
+- gRPC connection per client WebSocket to Speechly API
+- Querying Fineli nutrition data based using Speechly's NLU transcripts   
 
 ## Requirements
 
 - node 12 or later 
-- an application id from Speechgrinder
+- an application id from Speechly
 
-To get an application id apply to our beta program by sending an email to [appid@speechgrinder.com](mailto:appid@speechgrinder.com).
+To get an application id apply to our beta program by sending an email to [appid@speechly.com](mailto:appid@speechly.com).
 
 ## Building and running the service
 
