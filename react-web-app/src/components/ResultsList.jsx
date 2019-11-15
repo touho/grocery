@@ -2,6 +2,8 @@ import React from 'react'
 import AppContext from '../context/AppContext'
 import { ResultsListItem } from './ResultsListItem'
 import { ProductsListItem } from './ProductsListItem'
+import { SLU_STATE } from '../sg'
+
 export default function ResultsList() {
   return (
     <main>
@@ -19,7 +21,8 @@ export default function ResultsList() {
           onItemIncrease,
           onItemFocused,
           onItemHovered,
-          hoveredProduct
+          hoveredProduct,
+          sluState
         }) => {
           const listClass = `results  ${
             subViewOpen ? 'results--transitionoffset' : ''
@@ -36,7 +39,7 @@ export default function ResultsList() {
                 <div className={'results--list'}>
                   {[...currentInterimItems, ...finalItems]
                     .filter(Boolean)
-                    .map(listItem => (
+                    .map((listItem, index) => (
                       <ResultsListItem
                         key={listItem.queryId}
                         isSelected={
@@ -63,6 +66,10 @@ export default function ResultsList() {
                         }
                         onItemHovered={() =>
                           onItemHovered(listItem.selectedProduct)
+                        }
+                        isActiveUtterance={
+                          index === 0 &&
+                          sluState === SLU_STATE.recording
                         }
                       />
                     ))}
