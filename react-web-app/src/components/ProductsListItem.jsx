@@ -14,7 +14,8 @@ export function ProductsListItem({
   showFunctions = false,
   isSelected = false,
   isSelectedProduct = false,
-  isHoveredProduct = false
+  isHoveredProduct = false,
+  isActiveUtterance = false
 }) {
   const {
     amount = '',
@@ -30,6 +31,13 @@ export function ProductsListItem({
     },
     {
       'list-item--hovered': isHoveredProduct && !isSelectedProduct
+    }
+  )
+
+  const utteranceClassName = classNames(
+    'list-item__info--utterance',
+    {
+      'list-item__info--utterance--active': isActiveUtterance
     }
   )
   return (
@@ -63,9 +71,7 @@ export function ProductsListItem({
           </div>
           <div className="list-item__info">
             {transcript && (
-              <div className="list-item__info--utterance">
-                {transcript}
-              </div>
+              <div className={utteranceClassName}>{transcript}</div>
             )}
             <div className={'list-item__info--title'}>
               {displayText}

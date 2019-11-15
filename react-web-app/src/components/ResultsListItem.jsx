@@ -14,7 +14,8 @@ export function ResultsListItem({
   onItemDecrease,
   onItemIncrease,
   onItemFocused,
-  onItemHovered
+  onItemHovered,
+  isActiveUtterance
 }) {
   const { transcript, selectedProduct } = item
 
@@ -32,6 +33,7 @@ export function ResultsListItem({
         isSelected={isSelected}
         isHoveredProduct={isHovered}
         showFunctions={true}
+        isActiveUtterance={isActiveUtterance}
       />
     )
   )

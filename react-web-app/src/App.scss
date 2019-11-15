@@ -1,12 +1,13 @@
 @import './reset.css';
 
 $accent-color: #a71931;
-$functions-color: #f2f3ef;
-$text-color: #333;
-$border-color: #f6f4ef;
-$theme-color: #f6f4ef;
-$header-height: 100px;
+$functions-color: #e1e2e1;
+$text-color: #1e0003;
+$border-color: #faf7f7;
+$theme-color: #faf7f7;
+$header-height: 10%;
 $mobile-padding: 15px;
+$light-theme-color: #ece8e8;
 
 @font-face {
   font-family: 'BrixSlabRegular';
@@ -18,13 +19,20 @@ body {
   overflow: hidden;
 }
 
+button {
+  color: $text-color;
+}
+
 h1 {
   font-size: 2rem;
 }
 
-html, body, #root, #root>div {
+html,
+body,
+#root,
+#root > div {
   height: 100%;
-  min-height: 100%
+  min-height: 100%;
 }
 
 .app {
@@ -38,6 +46,10 @@ html, body, #root, #root>div {
     height: $header-height;
     width: 100%;
     flex-shrink: 0;
+    z-index: 2;
+    box-shadow: 3px 3px 8px 0px #d99da1;
+
+    z-index: 2;
   }
 
   .results {
@@ -57,7 +69,7 @@ html, body, #root, #root>div {
       }
     }
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   main {
@@ -66,6 +78,10 @@ html, body, #root, #root>div {
     max-width: 1024px;
     display: flex;
     width: 100%;
+    -webkit-box-shadow: 3px 3px 16px 0px rgba(207, 207, 207, 1);
+    -moz-box-shadow: 3px 3px 16px 0px rgba(207, 207, 207, 1);
+    box-shadow: 3px 3px 16px 0px rgba(207, 207, 207, 1);
+
     .list-item {
       display: flex;
       flex-direction: column;
@@ -91,15 +107,24 @@ html, body, #root, #root>div {
         width: 100%;
         padding-left: 15px;
         &--utterance {
+          transition: all 1s;
+          transition-timing-function: ease-in-out;
           display: inline-block;
-          color: white;
+          color: #892929;
           margin-bottom: 10px;
           padding: 6px;
           font-size: 12px;
-          background-color: $accent-color;
+          background-color: #efe5e7;
           border-radius: 10px;
+          &--active {
+            transition: all 1s;
+            transition-timing-function: ease-in-out;
+            padding: 10px;
+            font-size: 16px;
+            color: white;
+            background-color: $accent-color;
+          }
           @media only screen and (min-width: 768px) {
-            padding: 7px;
             font-size: 14px;
             border-radius: 12px;
           }
@@ -110,9 +135,10 @@ html, body, #root, #root>div {
           width: 80px;
           height: 100%;
           font-size: 14px;
-          background: white;
-          border: 2px solid $border-color;
+          border: none;
           margin-right: -15px;
+          background: #f4f4f4;
+          margin-left: 10px;
         }
       }
       &-functions {
@@ -133,8 +159,8 @@ html, body, #root, #root>div {
             visibility: visible;
             font-size: 26px;
             width: 100%;
-            background-color: white;
-            border: 1px solid $border-color;
+            background-color: #f4f4f4;
+            border: 1px solid white;
             svg {
               width: 20px;
             }
@@ -171,7 +197,7 @@ html, body, #root, #root>div {
     position: fixed;
     height: 100vh;
     max-width: 1024px;
-    top: 100px;
+    top: 10%;
     transition: transform 0.2s;
     transition-timing-function: ease-in-out;
     overflow-y: scroll;
@@ -191,7 +217,7 @@ html, body, #root, #root>div {
       }
       margin: 20px;
       text-align: left;
-      border-bottom: 1px solid silver;
+      border-bottom: 1px solid #515050;
       display: flex;
       h1 {
         min-height: 90px;
@@ -212,7 +238,7 @@ html, body, #root, #root>div {
     display: flex;
     justify-content: space-around;
     z-index: 2;
-    background-color: $theme-color;
+    background-color: $light-theme-color;
     div {
       width: 25%;
     }
@@ -224,6 +250,8 @@ html, body, #root, #root>div {
     border: none;
     width: 60%;
     height: 100%;
+    margin-left: auto;
+    margin-right: auto;
     @media only screen and (min-width: 768px) {
       width: 28%;
     }
@@ -238,28 +266,36 @@ html, body, #root, #root>div {
       }
     }
     svg {
-      fill: silver;
+      fill: #515050;
       outline: none;
       transition: all 0.5s;
       transition-timing-function: ease-in-out;
     }
     &__small {
       width: 40%;
+      display: table;
       @media only screen and (min-width: 768px) {
         width: 22%;
       }
       @media only screen and (min-width: 1024px) {
         width: 18%;
       }
-
       svg {
-        fill: silver;
+        fill: #515050;
+      }
+    }
+
+    &__mic {
+      display: table;
+      object {
+        vertical-align: middle;
+        display: table-cell;
       }
     }
 
     &__active {
       svg {
-        fill: #333;
+        fill: #515050;
       }
       &-pressed {
         svg {
