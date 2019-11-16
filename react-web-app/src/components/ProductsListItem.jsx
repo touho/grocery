@@ -54,9 +54,11 @@ export function ProductsListItem({
             }
           }}
           onClick={event => {
+            console.log(event.target.className)
             if (
               event.target.className !== '' &&
-              event.target.className !== 'list-item-open-functions'
+              event.target.className.indexOf('list-item__quantity') <
+                0
             ) {
               onItemSelected(product)
             }
@@ -80,25 +82,30 @@ export function ProductsListItem({
           <div className="list-item__quantity">
             {showFunctions && (
               <button
-                className="list-item-open-functions"
+                className="list-item__quantity"
                 onClick={event => {
                   if (
-                    event.target.className ===
-                    'list-item-open-functions'
+                    event.target.className.indexOf(
+                      'list-item__quantity' === 0
+                    )
                   ) {
                     onItemFocused(event)
                   }
                 }}
               >
-                {amount} {unitName}
+                <div className="list-item__quantity--title">
+                  {amount}
+                </div>
+                <div className="list-item__quantity--secondary">
+                  {unitName}
+                </div>
               </button>
             )}
           </div>
         </div>
-
         <div
-          className={`list-item-functions ${
-            isSelected ? 'list-item-functions__selected' : ''
+          className={`list-item__functions ${
+            isSelected ? 'list-item__functions__selected' : ''
           }`}
         >
           <button onClick={onItemRemove}>
