@@ -78,7 +78,10 @@ export function slu() {
   }
 
   context.start = event => {
-    event.preventDefault();
+    if(event) {
+      event.preventDefault();
+    }
+    
     if (isConnected()) {
       ws[kStart]();
       context.onstatechange(SLU_STATE.recording);
