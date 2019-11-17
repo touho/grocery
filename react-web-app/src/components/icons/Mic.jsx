@@ -29,6 +29,17 @@ export class Mic extends React.Component {
     this.down = props.onDown
     this.up = props.onUp
     this.rootDiv = React.createRef()
+
+    document.onkeydown = e => this.spaceBar(e, this.down)
+    document.onkeyup = e => this.spaceBar(e, this.up)
+  }
+
+  spaceBar = (e, cb) => {
+    e = e || window.event
+
+    if (e.keyCode == '32' && !e.repeat) {
+      cb(e)
+    }
   }
 
   componentDidMount() {

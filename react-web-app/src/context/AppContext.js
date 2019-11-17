@@ -73,9 +73,12 @@ class AppContextProvider extends Component {
         sluState: text
       })
     }
-    this.setState({
-      sluContext
-    })
+    this.setState(
+      {
+        sluContext
+      },
+      () => this.startRecording()
+    )
   }
   startRecording = event => {
     console.log('startRecording', event)
