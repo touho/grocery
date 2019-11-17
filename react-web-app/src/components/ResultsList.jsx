@@ -79,7 +79,7 @@ export default function ResultsList() {
                 {subViewItem && (
                   <div className="subview__innercontainer">
                     <div className="subview__product-info">
-                      <img src={infoProduct.imageUrl} />
+                      <img src={infoProduct.imageUrl} alt="" />
                       <div className="subview__product-info__text">
                         <h1>{infoProduct.displayText}</h1>
                         <p>
