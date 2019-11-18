@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { SLU_STATE } from './../sg'
 
-const applySelectedProduct = segments =>
+const applySelectedProduct = (segments, type) =>
   segments.map(sg => {
     return {
       ...sg,
+      type,
       selectedProduct: sg.products.length ? sg.products[0] : {}
     }
   })
@@ -42,12 +43,14 @@ class AppContextProvider extends Component {
       if (type === 'interimItem') {
         this.setState({
           currentInterimItems: applySelectedProduct(
-            segments
+            segments,
+            type
           ).reverse()
         })
       } else if (type === 'finalItem') {
         const modifiedSegments = applySelectedProduct(
-          segments
+          segments,
+          type
         ).reverse()
         console.log(
           'on transcript modified segments',
