@@ -1,13 +1,9 @@
 @import './reset.css';
+@import './components/Colors.scss';
 @import './components/icons/RecordingWave.scss';
+@import './components/Onboarding.scss';
 
-$accent-color: #a80021;
-$functions-color: #e1e2e1;
-$text-color: #1e0003;
-$border-color: #faf7f7;
-$theme-color: #faf7f7;
 $mobile-padding: 15px;
-$light-theme-color: #ece8e8;
 
 @font-face {
   font-family: 'BrixSlabRegular';
@@ -19,20 +15,31 @@ body {
   overflow: hidden;
 }
 
-button {
-  color: $text-color;
-}
-
-h1 {
-  font-size: 2rem;
-}
-
 html,
 body,
 #root,
 #root > div {
   height: 100%;
   min-height: 100%;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  color: $text-color;
+}
+
+h1 {
+  font-size: 2rem;
+  @media only screen and (min-width: 768px) {
+    font-size: 2.5rem;
+  }
 }
 
 .app {
