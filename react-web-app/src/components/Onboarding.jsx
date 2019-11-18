@@ -1,9 +1,13 @@
 import React from 'react'
 
 const Onboarding = props => (
-  <div className="onboarding">
+  <div
+    className={`onboarding ${
+      props.step === 1 ? 'onboarding--long' : ''
+    }`}
+  >
     {props.step === 1 && (
-      <div>
+      <>
         <h1>Hi there!</h1>
         <div>You can speak to this app, here’s how:</div>
         <div>
@@ -15,10 +19,10 @@ const Onboarding = props => (
         </div>
         <div className="italic">”apples, oranges, potato chips”</div>
         <div>
-          The cart icon will add your items to your ShopValu trolley
+          The cart icon will add your items to your SuperValu trolley
         </div>
         <div>Enjoy shopping!</div>
-      </div>
+      </>
     )}
     {props.step === 2 && <h1>Speak...</h1>}
   </div>
