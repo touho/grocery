@@ -3,6 +3,7 @@ import AppContext from '../context/AppContext'
 import { ResultsListItem } from './ResultsListItem'
 import { ProductsListItem } from './ProductsListItem'
 import { SLU_STATE } from '../sg'
+import Onboarding from './Onboarding'
 
 export default function ResultsList() {
   return (
@@ -24,10 +25,12 @@ export default function ResultsList() {
           hoveredProduct,
           sluState
         }) => {
-          const listClass = `results  ${
+          const showOnboarding =
+            !currentInterimItems.length && !finalItems.length
+          const listClass = `results ${
             subViewOpen ? 'results--transitionoffset' : ''
-          }`
-          const subViewClass = `subview  ${
+          } ${showOnboarding ? 'hidden' : ''}`
+          const subViewClass = `subview ${
             !subViewOpen ? 'subview--transitionoffset' : ''
           }`
           const infoProduct =
@@ -35,6 +38,7 @@ export default function ResultsList() {
             (subViewItem && subViewItem.selectedProduct)
           return (
             <>
+              {showOnboarding && <Onboarding />}
               <div className={listClass}>
                 <div className={'results--list'}>
                   {[...currentInterimItems, ...finalItems]
