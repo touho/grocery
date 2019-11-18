@@ -38,7 +38,9 @@ export default function ResultsList() {
             (subViewItem && subViewItem.selectedProduct)
           return (
             <>
-              {showOnboarding && <Onboarding />}
+              {showOnboarding && (
+                <Onboarding step={sluState !== 'Recording' ? 1 : 2} />
+              )}
               <div className={listClass}>
                 <div className={'results--list'}>
                   {[...currentInterimItems, ...finalItems]
