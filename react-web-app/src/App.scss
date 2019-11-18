@@ -131,7 +131,7 @@ h1 {
         padding: $mobile-padding;
         color: $text-color;
         @media only screen and (min-width: 768px) {
-          font-size: 18px;
+          font-size: 20px;
           padding: 20px;
         }
       }
@@ -320,24 +320,23 @@ h1 {
       transition-timing-function: ease-in-out;
     }
     &__small {
-      width: 40%;
       display: table;
-      @media only screen and (min-width: 768px) {
-        width: 22%;
-      }
-      @media only screen and (min-width: 1024px) {
-        width: 18%;
-      }
-      svg {
-        fill: #515050;
-      }
-    }
-
-    &__mic {
       display: table;
       object {
         vertical-align: middle;
         display: table-cell;
+        width: 100px;
+      }
+      svg {
+        fill: #515050;
+        width: 40%;
+        @media only screen and (min-width: 768px) {
+          width: 80%;
+        }
+        @media only screen and (min-width: 1024px) {
+          width: 60%;
+        }
+
       }
     }
 
