@@ -232,7 +232,10 @@ body,
     position: fixed;
     height: 100vh;
     max-width: 1024px;
-    top: 10%;
+    top: 80px;
+    @media only screen and (min-width: 768px) {
+      top: 120px;
+    }
     transition: transform 0.2s;
     transition-timing-function: ease-in-out;
     overflow-y: scroll;

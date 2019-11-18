@@ -69,7 +69,8 @@ export default function ResultsList() {
                         }
                         isActiveUtterance={
                           index === 0 &&
-                          sluState === SLU_STATE.recording
+                          sluState === SLU_STATE.recording &&
+                          listItem.type === 'interimItem'
                         }
                       />
                     ))}
