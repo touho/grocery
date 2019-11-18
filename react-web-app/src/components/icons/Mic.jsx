@@ -66,7 +66,6 @@ export class Mic extends React.Component {
     const className = classNames(
       'function-button',
       'function-button__small',
-      'function-button__mic',
       {
         'function-button__active':
           this.props.sluState === SLU_STATE.ready ||
