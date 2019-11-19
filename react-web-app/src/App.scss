@@ -213,6 +213,7 @@ h1 {
 
       &-img {
         flex-basis: 140px;
+        -webkit-backface-visibility: hidden;
         @media only screen and (min-width: 768px) {
           flex-basis: 180px;
           width: 100px;
@@ -225,6 +226,7 @@ h1 {
           width: 75px;
           height: 75px;
           background-position: center center;
+          -webkit-backface-visibility: hidden;
           @media only screen and (min-width: 768px) {
             width: 120px;
             height: 120px;
@@ -337,7 +339,6 @@ h1 {
         @media only screen and (min-width: 1024px) {
           width: 60%;
         }
-
       }
     }
 
