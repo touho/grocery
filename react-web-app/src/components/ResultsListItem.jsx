@@ -5,7 +5,7 @@ export const listItemBackgroundStyle = imageUrl => {
     backgroundImage: `url(${imageUrl})`
   }
 }
-export function ResultsListItem({
+const ResultsListItem = ({
   item,
   isSelected,
   isHovered,
@@ -16,7 +16,7 @@ export function ResultsListItem({
   onItemFocused,
   onItemHovered,
   isActiveUtterance
-}) {
+}) => {
   const { transcript, selectedProduct } = item
 
   return (
@@ -38,3 +38,5 @@ export function ResultsListItem({
     )
   )
 }
+
+export default ResultsListItem
