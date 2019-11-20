@@ -55,8 +55,8 @@ export default function ResultsList() {
                         isHovered={
                           hoveredProduct &&
                           listItem.selectedProduct &&
-                          listItem.selectedProduct.productid ===
-                            hoveredProduct.productid
+                          listItem.selectedProduct.ean ===
+                            hoveredProduct.ean
                         }
                         item={listItem}
                         onItemFocused={() => onItemFocused(listItem)}
@@ -97,15 +97,15 @@ export default function ResultsList() {
                     {subViewItem.products.map(product => (
                       <ProductsListItem
                         isSelectedProduct={
-                          subViewItem.selectedProduct.productid ===
-                          product.productid
+                          subViewItem.selectedProduct.ean ===
+                          product.ean
                         }
                         isHoveredProduct={
                           hoveredProduct &&
-                          hoveredProduct.productid ===
-                            product.productid
+                          hoveredProduct.ean ===
+                            product.ean
                         }
-                        key={product.productid}
+                        key={product.ean}
                         product={product}
                         onItemFocused={() =>
                           subViewItemSelected(product)
