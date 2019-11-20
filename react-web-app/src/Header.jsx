@@ -1,7 +1,7 @@
 import React from 'react'
 import AppContext from './context/AppContext'
 import { RecordingWave } from './components/icons/RecordingWave'
-import Logo from './SuperValu_Logo.jpg'
+import Logo from './logo.jpg'
 export default function Header() {
   return (
     <AppContext.Consumer>

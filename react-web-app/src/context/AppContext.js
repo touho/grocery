@@ -113,12 +113,11 @@ class AppContextProvider extends Component {
 
   addToCart = () => {
     const selectedProductIds = this.state.finalItems
-      .map(fi => `${fi.selectedProduct.ean}`)
-      .join(',')
-    window.open(
-      `${process.env.REACT_APP_ECOM_URL}${selectedProductIds}`,
-      'new'
-    )
+      .map(
+        ({ selectedProduct: { ean, amount } }) => `${ean}=${amount}`
+      )
+      .join('&')
+    window.open(`/checkout?${selectedProductIds}`, 'new')
   }
 
   onItemRemove = item => {
