@@ -117,7 +117,10 @@ class AppContextProvider extends Component {
         ({ selectedProduct: { ean, amount } }) => `${ean}=${amount}`
       )
       .join('&')
-    window.open(`/checkout?${selectedProductIds}`, 'new')
+
+    let pathParts = document.location.pathname.split('/')
+    pathParts[pathParts.length - 1] = 'checkout'
+    window.open(`${pathParts.join('/')}?${selectedProductIds}`, 'new')
   }
 
   onItemRemove = item => {
