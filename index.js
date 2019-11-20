@@ -449,6 +449,12 @@ httpApp.get("/ping", function(req, res) {
   return res.send("pong");
 });
 
+const checkoutUrl = process.env.CHECKOUT_URL;
+httpApp.get("/checkout", function(req, res) {
+  const selectedProductIds = Object.keys(req.query).join(",");
+  return res.redirect(`${checkoutUrl}${selectedProductIds}`);
+});
+
 httpApp.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "www", "index.html"));
 });
