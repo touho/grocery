@@ -142,7 +142,7 @@ const findSegments = utterance => {
 const findSegmentsWithProducts = (utterance, language) => {
   try {
     const segments = findSegments(utterance);
-    const queriesForSegments = segments.map(tokens => createProductQuery(tokens, getEntitySpans(tokens), language, 5));
+    const queriesForSegments = segments.map(tokens => createProductQuery(tokens, getEntitySpans(tokens), language, 10));
     return queriesForSegments.map(query => productSearch.queryProducts(query));
   } catch (err) {
     logger.debug("Failed to handle product query");
