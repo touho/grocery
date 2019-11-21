@@ -18,32 +18,26 @@ export default function FunctionButtons() {
         toggleItemSubView
       }) => (
         <footer>
-          <div>
-            {subViewOpen ? (
-              <Back
-                disabled={!(finalItems && finalItems.length)}
-                onBack={() => toggleItemSubView(null)}
-              />
-            ) : (
-              <Clear
-                disabled={!(finalItems && finalItems.length)}
-                onClear={clearList}
-              />
-            )}
-          </div>
-          <div>
-            <Mic
-              onUp={event => stopRecording(event)}
-              onDown={event => startRecording(event)}
-              sluState={sluState}
-            />
-          </div>
-          <div>
-            <AddToCart
+          {subViewOpen ? (
+            <Back
               disabled={!(finalItems && finalItems.length)}
-              onAdd={addToCart}
+              onBack={() => toggleItemSubView(null)}
             />
-          </div>
+          ) : (
+            <Clear
+              disabled={!(finalItems && finalItems.length)}
+              onClear={clearList}
+            />
+          )}
+          <Mic
+            onUp={event => stopRecording(event)}
+            onDown={event => startRecording(event)}
+            sluState={sluState}
+          />
+          <AddToCart
+            disabled={!(finalItems && finalItems.length)}
+            onAdd={addToCart}
+          />
         </footer>
       )}
     </AppContext.Consumer>
