@@ -12,7 +12,6 @@ $mobile-padding: 15px;
 
 body {
   font-family: 'BrixSlabRegular';
-  overflow: hidden;
 }
 
 html,
@@ -90,7 +89,6 @@ h1 {
     left: 0vw;
     transition: left 0.2s;
     transition-timing-function: ease-in-out;
-    overflow-x: hidden;
     overflow-y: auto;
     &--transitionoffset {
       left: -100vw;
@@ -325,9 +323,9 @@ h1 {
     &__small {
       display: flex;
       height: 100%;
-      margin-top: 2vh;
       justify-content: center;
       object {
+        margin-top: 2vh;
         vertical-align: middle;
         display: table-cell;
         width: 100px;
