@@ -73,10 +73,30 @@
         recordDiv.addEventListener("mouseup", s.stop);
         recordDiv.addEventListener("touchstart", s.start);
         recordDiv.addEventListener("touchend", s.stop);
+
+        const input = document.getElementById("text-input");
+        const w = wlu();
+        w.ontranscription = ontranscription;
+        let changes = false
+        function search() {
+          if (!changes) return
+          changes = false
+          w.search(input.value)
+        }
+        input.addEventListener("keydown", event => {
+          if (event.key === "Enter") {
+            event.preventDefault()
+            changes = true
+            search()
+          }
+        })
+        input.addEventListener("change", search)
+        input.addEventListener("input", () => changes = true)
       };
     </script>
     <div id="status"></div>
     <div id="record" class="button">Connect</div>
+    <input id="text-input" type="text" placeholder="text search">
     <div id="items"></div>
   </body>
 </html>

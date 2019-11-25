@@ -8,6 +8,8 @@ const grpc = require("grpc");
 const crypto = require("crypto");
 const wav = require("wav");
 const path = require("path");
+const bodyParser = require("body-parser")
+const uuidv4 = require("uuid/v4");
 
 const logger = console;
 
@@ -438,6 +440,47 @@ httpApp.get("/", (req, res) => {
   const baseUrl = req.headers["x-envoy-original-path"] || req.baseUrl;
   res.redirect(baseUrl + "/index.html");
 });
+httpApp.use(bodyParser.json());
+httpApp.post("/textSearch", async (req, res) => {
+  async function getToken() {
+    let deviceId = crypto
+    .createHash("md5")
+    .update(req.headers["user-agent"])
+    .digest("hex")
+
+    return await createToken(deviceId)
+  }
+  const text = req.body.text
+  const languageCode = req.body.languageCode || "fi-FI"
+  const token = await getToken()
+  const writtenMetadata = new grpc.Metadata()
+  writtenMetadata.add("Authorization", `Bearer ${token}`)
+  const writtenClient = new SgGrpc.speechgrinder.sgapi.v1.Wlu(sgApiUrl, grpc.credentials.createSsl())
+  writtenClient.Parse({
+    text,
+    languageCode
+  }, writtenMetadata, (err, response) => {
+    if (err) {
+      console.error('Wlu error', err)
+      res.status(400).send({
+        error: err
+      })
+    } else {
+      let utterance = {
+        languageCode,
+        alternatives: [response],
+        type: 'finalItem',
+        utteranceId: uuidv4()
+      }
+      const productSegments = parseProductSegments(utterance)
+      res.send({
+        utteranceId: utterance.utteranceId,
+        type: utterance.type,
+        segments: productSegments
+      })
+    }
+  })
+})
 httpApp.use(express.static("www", { index: false }));
 
 const httpServer = http.createServer(httpApp);

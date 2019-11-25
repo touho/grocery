@@ -181,3 +181,25 @@ function slu() {
 
   return context;
 }
+
+function wlu() {
+  const context = { ontranscription: () => {} };
+  context.search = text => {
+    if (!text) return
+
+    fetch("/textSearch", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        text
+      })
+    }).then(response => {
+      response.json().then(context.ontranscription)
+    }).catch((e) => {
+      console.error('Wlu error', e)
+    })
+  }
+  return context;
+}
