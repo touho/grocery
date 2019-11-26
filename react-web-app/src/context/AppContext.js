@@ -11,8 +11,8 @@ const applySelectedProduct = (segments, type) =>
   })
 
 const defaultState = {
-  startRecording: () => {},
-  stopRecording: () => {},
+  stopSpeaking: () => {},
+  startSpeaking: () => {},
   toggleItemSubView: item => {},
   clearList: () => {},
   addToCart: () => {},
@@ -23,7 +23,8 @@ const defaultState = {
   subViewItem: undefined,
   subViewOpen: false,
   focusedItem: undefined,
-  hoveredProduct: undefined
+  hoveredProduct: undefined,
+  recordButtonIsPressed: false
 }
 
 const AppContext = React.createContext(defaultState)
@@ -37,45 +38,11 @@ class AppContextProvider extends Component {
     }
 
     let sluContext = this.props.sluContext
+    sluContext.onstatechange = this.onStateChange
+    sluContext.onstatus = this.onStatus
+    sluContext.ontranscription = this.onTranscription
 
-    sluContext.ontranscription = data => {
-      const { type, segments } = data
-      if (type === 'interimItem') {
-        this.setState({
-          currentInterimItems: applySelectedProduct(
-            segments,
-            type
-          ).reverse()
-        })
-      } else if (type === 'finalItem') {
-        const modifiedSegments = applySelectedProduct(
-          segments,
-          type
-        ).reverse()
-        console.log(
-          'on transcript modified segments',
-          modifiedSegments
-        )
-        const finalItemsModified = [
-          ...modifiedSegments,
-          ...this.state.finalItems
-        ]
-        localStorage.setItem(
-          'items',
-          JSON.stringify(finalItemsModified)
-        )
-        this.setState({
-          finalItems: finalItemsModified,
-          currentInterimItems: []
-        })
-      }
-    }
-
-    sluContext.onstatechange = text => {
-      this.setState({
-        sluState: text
-      })
-    }
+    //Auto-start to ask for mic consent
     this.setState(
       {
         sluContext
@@ -83,14 +50,88 @@ class AppContextProvider extends Component {
       () => this.startRecording()
     )
   }
+
+  onStateChange = sluState => {
+    this.setState({
+      sluState
+    })
+  }
+
+  onTranscription = data => {
+    const { type, segments } = data
+    if (type === 'interimItem') {
+      this.setState({
+        currentInterimItems: applySelectedProduct(
+          segments,
+          type
+        ).reverse()
+      })
+    } else if (type === 'finalItem') {
+      const modifiedSegments = applySelectedProduct(
+        segments,
+        type
+      ).reverse()
+      console.log('on transcript modified segments', modifiedSegments)
+      const finalItemsModified = [
+        ...modifiedSegments,
+        ...this.state.finalItems
+      ]
+      localStorage.setItem(
+        'items',
+        JSON.stringify(finalItemsModified)
+      )
+      this.setState({
+        finalItems: finalItemsModified,
+        currentInterimItems: []
+      })
+    }
+  }
+
+  onStatus = status => {
+    const { sluStatus, recordButtonIsPressed } = this.state
+    if (sluStatus === status) {
+      return
+    }
+    this.setState({ sluStatus: status }, () => {
+      if (status == 'Ready' && recordButtonIsPressed) {
+        let autoStartHandle = setInterval(() => {
+          this.startRecording()
+          clearInterval(autoStartHandle)
+        }, 1000)
+      }
+    })
+  }
+
   startRecording = event => {
     console.log('startRecording', event)
     try {
       this.state.sluContext.start(event)
-      this.setState({ subViewOpen: false })
+      this.setState({
+        subViewOpen: false
+      })
     } catch (err) {
       console.error(err)
     }
+  }
+
+  startSpeaking = event => {
+    this.toggleRecordButtonState(true, () => {
+      this.startRecording(event)
+    })
+  }
+
+  stopSpeaking = event => {
+    this.toggleRecordButtonState(false)
+    this.stopRecording(event)
+  }
+
+  toggleRecordButtonState = (recordButtonIsPressed, callback) => {
+    this.setState(
+      {
+        recordButtonIsPressed
+      },
+      callback
+    )
   }
 
   toggleItemSubView = item => {
@@ -102,7 +143,9 @@ class AppContextProvider extends Component {
 
   stopRecording = event => {
     console.log('stopRecording', event)
-    this.setState({ subViewOpen: false })
+    this.setState({
+      subViewOpen: false
+    })
     this.state.sluContext.stop(event)
   }
 
@@ -199,8 +242,8 @@ class AppContextProvider extends Component {
       <AppContext.Provider
         value={{
           ...this.state,
-          startRecording: this.startRecording,
-          stopRecording: this.stopRecording,
+          startSpeaking: this.startSpeaking,
+          stopSpeaking: this.stopSpeaking,
           clearList: this.clearList,
           addToCart: this.addToCart,
           toggleItemSubView: this.toggleItemSubView,

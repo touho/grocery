@@ -48,7 +48,7 @@ export default class ResultsList extends React.Component {
                   />
                 )}
                 <div className={listClass} ref={this.rootDiv}>
-                  <div className={'results--list'}>
+                  <ul className={'results--list'}>
                     {[...currentInterimItems, ...finalItems]
                       .filter(Boolean)
                       .map((listItem, index) => (
@@ -88,7 +88,7 @@ export default class ResultsList extends React.Component {
                           }
                         />
                       ))}
-                  </div>
+                  </ul>
                 </div>
                 <div className={subViewClass}>
                   {subViewItem && (
@@ -103,30 +103,34 @@ export default class ResultsList extends React.Component {
                           </p>
                         </div>
                       </div>
-                      {subViewItem.products.map(product => (
-                        <ProductsListItem
-                          isSelectedProduct={
-                            subViewItem.selectedProduct.ean ===
-                            product.ean
-                          }
-                          isHoveredProduct={
-                            hoveredProduct &&
-                            hoveredProduct.ean === product.ean
-                          }
-                          key={product.ean}
-                          product={product}
-                          onItemFocused={() =>
-                            subViewItemSelected(product)
-                          }
-                          onItemRemove={onItemRemove}
-                          onItemDecrease={onItemDecrease}
-                          onItemIncrease={onItemIncrease}
-                          onItemSelected={() =>
-                            subViewItemSelected(product)
-                          }
-                          onItemHovered={() => onItemHovered(product)}
-                        />
-                      ))}
+                      <ul>
+                        {subViewItem.products.map(product => (
+                          <ProductsListItem
+                            isSelectedProduct={
+                              subViewItem.selectedProduct.ean ===
+                              product.ean
+                            }
+                            isHoveredProduct={
+                              hoveredProduct &&
+                              hoveredProduct.ean === product.ean
+                            }
+                            key={product.ean}
+                            product={product}
+                            onItemFocused={() =>
+                              subViewItemSelected(product)
+                            }
+                            onItemRemove={onItemRemove}
+                            onItemDecrease={onItemDecrease}
+                            onItemIncrease={onItemIncrease}
+                            onItemSelected={() =>
+                              subViewItemSelected(product)
+                            }
+                            onItemHovered={() =>
+                              onItemHovered(product)
+                            }
+                          />
+                        ))}
+                      </ul>
                     </div>
                   )}
                 </div>

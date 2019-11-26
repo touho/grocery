@@ -8,8 +8,8 @@ export default function FunctionButtons() {
   return (
     <AppContext.Consumer>
       {({
-        startRecording,
-        stopRecording,
+        startSpeaking,
+        stopSpeaking,
         clearList,
         finalItems,
         sluState,
@@ -30,8 +30,8 @@ export default function FunctionButtons() {
             />
           )}
           <Mic
-            onUp={event => stopRecording(event)}
-            onDown={event => startRecording(event)}
+            onUp={event => stopSpeaking(event)}
+            onDown={event => startSpeaking(event)}
             sluState={sluState}
           />
           <AddToCart

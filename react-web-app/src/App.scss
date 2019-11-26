@@ -248,7 +248,7 @@ h1 {
     transition-timing-function: ease-in-out;
     overflow-y: scroll;
     &__innercontainer {
-      padding-bottom: 150px;
+      margin-bottom: calc(10vh + 150px);
     }
     &--transitionoffset {
       transform: translateX(100vw);
