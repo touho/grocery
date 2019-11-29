@@ -4,6 +4,21 @@ import ResultsListItem from './ResultsListItem'
 import { ProductsListItem } from './ProductsListItem'
 import { SLU_STATE } from '../sg'
 import Onboarding from './Onboarding'
+
+const getProductImages = product => {
+  let productImages = {}
+  if (product) {
+    productImages = {
+      image: product.imageUrl
+    }
+    product.images &&
+      product.images.forEach(productImage => {
+        productImages[productImage.type] = productImage.url
+      })
+  }
+  return productImages
+}
+
 export default class ResultsList extends React.Component {
   render() {
     this.rootDiv = React.createRef()
@@ -26,8 +41,7 @@ export default class ResultsList extends React.Component {
             hoveredProduct,
             sluState
           }) => {
-            const showOnboarding =
-              !currentInterimItems.length && !finalItems.length
+            const showOnboarding = !currentInterimItems.length && !finalItems.length
             const listClass = `results ${
               subViewOpen ? 'results--transitionoffset' : ''
             } ${showOnboarding ? 'hidden' : ''}`
@@ -35,18 +49,15 @@ export default class ResultsList extends React.Component {
               !subViewOpen ? 'subview--transitionoffset' : ''
             }`
             const infoProduct =
-              hoveredProduct ||
-              (subViewItem && subViewItem.selectedProduct)
+              hoveredProduct || (subViewItem && subViewItem.selectedProduct)
             if (sluState === 'Recording') {
               this.rootDiv.current.scrollTop = 0
             }
+
+            let infoProductImageUrls = getProductImages(infoProduct)
             return (
               <>
-                {showOnboarding && (
-                  <Onboarding
-                    step={sluState !== 'Recording' ? 1 : 2}
-                  />
-                )}
+                {showOnboarding && <Onboarding step={sluState !== 'Recording' ? 1 : 2} />}
                 <div className={listClass} ref={this.rootDiv}>
                   <ul className={'results--list'}>
                     {[...currentInterimItems, ...finalItems]
@@ -55,32 +66,20 @@ export default class ResultsList extends React.Component {
                         <ResultsListItem
                           key={listItem.queryId}
                           isSelected={
-                            focusedItem &&
-                            listItem.queryId === focusedItem.queryId
+                            focusedItem && listItem.queryId === focusedItem.queryId
                           }
                           isHovered={
                             hoveredProduct &&
                             listItem.selectedProduct &&
-                            listItem.selectedProduct.ean ===
-                              hoveredProduct.ean
+                            listItem.selectedProduct.ean === hoveredProduct.ean
                           }
                           item={listItem}
-                          onItemFocused={() =>
-                            onItemFocused(listItem)
-                          }
+                          onItemFocused={() => onItemFocused(listItem)}
                           onItemRemove={() => onItemRemove(listItem)}
-                          onItemDecrease={() =>
-                            onItemDecrease(listItem)
-                          }
-                          onItemIncrease={() =>
-                            onItemIncrease(listItem)
-                          }
-                          onItemSelected={() =>
-                            toggleItemSubView(listItem)
-                          }
-                          onItemHovered={() =>
-                            onItemHovered(listItem.selectedProduct)
-                          }
+                          onItemDecrease={() => onItemDecrease(listItem)}
+                          onItemIncrease={() => onItemIncrease(listItem)}
+                          onItemSelected={() => toggleItemSubView(listItem)}
+                          onItemHovered={() => onItemHovered(listItem.selectedProduct)}
                           isActiveUtterance={
                             index === 0 &&
                             sluState === SLU_STATE.recording &&
@@ -94,12 +93,17 @@ export default class ResultsList extends React.Component {
                   {subViewItem && (
                     <div className="subview__innercontainer">
                       <div className="subview__product-info">
-                        <img src={infoProduct.imageUrl} alt="" />
+                        <picture>
+                          <source
+                            media="(min-width: 400px)"
+                            srcset={infoProductImageUrls.large}
+                          />
+                          <img src={infoProductImageUrls.imageUrl} alt="" />
+                        </picture>
                         <div className="subview__product-info__text">
                           <h1>{infoProduct.displayText}</h1>
                           <p>
-                            {infoProduct.amount}{' '}
-                            {infoProduct.unitName}
+                            {infoProduct.amount} {infoProduct.unitName}
                           </p>
                         </div>
                       </div>
@@ -107,27 +111,19 @@ export default class ResultsList extends React.Component {
                         {subViewItem.products.map(product => (
                           <ProductsListItem
                             isSelectedProduct={
-                              subViewItem.selectedProduct.ean ===
-                              product.ean
+                              subViewItem.selectedProduct.ean === product.ean
                             }
                             isHoveredProduct={
-                              hoveredProduct &&
-                              hoveredProduct.ean === product.ean
+                              hoveredProduct && hoveredProduct.ean === product.ean
                             }
                             key={product.ean}
                             product={product}
-                            onItemFocused={() =>
-                              subViewItemSelected(product)
-                            }
+                            onItemFocused={() => subViewItemSelected(product)}
                             onItemRemove={onItemRemove}
                             onItemDecrease={onItemDecrease}
                             onItemIncrease={onItemIncrease}
-                            onItemSelected={() =>
-                              subViewItemSelected(product)
-                            }
-                            onItemHovered={() =>
-                              onItemHovered(product)
-                            }
+                            onItemSelected={() => subViewItemSelected(product)}
+                            onItemHovered={() => onItemHovered(product)}
                           />
                         ))}
                       </ul>

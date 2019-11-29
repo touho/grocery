@@ -61,25 +61,13 @@ class AppContextProvider extends Component {
     const { type, segments } = data
     if (type === 'interimItem') {
       this.setState({
-        currentInterimItems: applySelectedProduct(
-          segments,
-          type
-        ).reverse()
+        currentInterimItems: applySelectedProduct(segments, type).reverse()
       })
     } else if (type === 'finalItem') {
-      const modifiedSegments = applySelectedProduct(
-        segments,
-        type
-      ).reverse()
+      const modifiedSegments = applySelectedProduct(segments, type).reverse()
       console.log('on transcript modified segments', modifiedSegments)
-      const finalItemsModified = [
-        ...modifiedSegments,
-        ...this.state.finalItems
-      ]
-      localStorage.setItem(
-        'items',
-        JSON.stringify(finalItemsModified)
-      )
+      const finalItemsModified = [...modifiedSegments, ...this.state.finalItems]
+      localStorage.setItem('items', JSON.stringify(finalItemsModified))
       this.setState({
         finalItems: finalItemsModified,
         currentInterimItems: []
@@ -156,9 +144,7 @@ class AppContextProvider extends Component {
 
   addToCart = () => {
     const selectedProductIds = this.state.finalItems
-      .map(
-        ({ selectedProduct: { ean, amount } }) => `${ean}=${amount}`
-      )
+      .map(({ selectedProduct: { ean, amount } }) => `${ean}=${amount}`)
       .join('&')
 
     let pathParts = document.location.pathname.split('/')
@@ -176,17 +162,14 @@ class AppContextProvider extends Component {
     })
   }
 
-  onItemIncrease = item =>
-    this.modifyListItemWithOperation(item, 'increase')
+  onItemIncrease = item => this.modifyListItemWithOperation(item, 'increase')
 
-  onItemDecrease = item =>
-    this.modifyListItemWithOperation(item, 'decrease')
+  onItemDecrease = item => this.modifyListItemWithOperation(item, 'decrease')
 
   onItemFocused = item => {
     this.setState({
       focusedItem:
-        this.state.focusedItem &&
-        this.state.focusedItem.queryId === item.queryId
+        this.state.focusedItem && this.state.focusedItem.queryId === item.queryId
           ? null
           : item //toggles or switches bbetween items
     })

@@ -17,13 +17,7 @@ export function ProductsListItem({
   isHoveredProduct = false,
   isActiveUtterance = false
 }) {
-  const {
-    amount = '',
-    displayText = '',
-    unitName = '',
-    imageUrl,
-    productID
-  } = product
+  const { amount = '', displayText = '', unitName = '', imageUrl, productID } = product
   const itemClassName = classNames(
     'list-item',
     {
@@ -34,22 +28,16 @@ export function ProductsListItem({
     }
   )
 
-  const utteranceClassName = classNames(
-    'list-item__info--utterance',
-    {
-      'list-item__info--utterance--active': isActiveUtterance
-    }
-  )
+  const utteranceClassName = classNames('list-item__info--utterance', {
+    'list-item__info--utterance--active': isActiveUtterance
+  })
   return (
     product && (
       <li className={itemClassName} key={productID}>
         <div
           className="list-item-main"
           onMouseOver={event => {
-            if (
-              onItemHovered &&
-              event.target.className !== 'list-item-open-functions'
-            ) {
+            if (onItemHovered && event.target.className !== 'list-item-open-functions') {
               onItemHovered(product)
             }
           }}
@@ -57,8 +45,7 @@ export function ProductsListItem({
             console.log(event.target.className)
             if (
               event.target.className !== '' &&
-              event.target.className.indexOf('list-item__quantity') <
-                0
+              event.target.className.indexOf('list-item__quantity') < 0
             ) {
               onItemSelected(product)
             }
@@ -72,33 +59,21 @@ export function ProductsListItem({
             />
           </div>
           <div className="list-item__info">
-            {transcript && (
-              <div className={utteranceClassName}>{transcript}</div>
-            )}
-            <div className={'list-item__info--title'}>
-              {displayText}
-            </div>
+            {transcript && <div className={utteranceClassName}>{transcript}</div>}
+            <div className={'list-item__info--title'}>{displayText}</div>
           </div>
           <div className="list-item__quantity">
             {showFunctions && (
               <button
                 className="list-item__quantity"
                 onClick={event => {
-                  if (
-                    event.target.className.indexOf(
-                      'list-item__quantity' === 0
-                    )
-                  ) {
+                  if (event.target.className.indexOf('list-item__quantity' === 0)) {
                     onItemFocused(event)
                   }
                 }}
               >
-                <div className="list-item__quantity--title">
-                  {amount}
-                </div>
-                <div className="list-item__quantity--secondary">
-                  {unitName}
-                </div>
+                <div className="list-item__quantity--title">{amount}</div>
+                <div className="list-item__quantity--secondary">{unitName}</div>
               </button>
             )}
           </div>
