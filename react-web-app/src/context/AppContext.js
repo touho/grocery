@@ -91,7 +91,9 @@ class AppContextProvider extends Component {
   }
 
   startRecording = event => {
-    console.log('startRecording', event)
+    if (this.state.sluState === SLU_STATE.noAudioConsent) {
+      return
+    }
     try {
       this.state.sluContext.start(event)
       this.setState({
@@ -176,7 +178,6 @@ class AppContextProvider extends Component {
   }
 
   onItemHovered = product => {
-    console.log(product)
     this.setState({
       hoveredProduct: product
     })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ProductsListItem } from './ProductsListItem'
+import ProductsListItem from './ProductsListItem'
 export const listItemBackgroundStyle = imageUrl => {
   return {
     backgroundImage: `url(${imageUrl})`

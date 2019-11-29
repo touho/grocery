@@ -1,23 +1,11 @@
 import React from 'react'
 import AppContext from '../context/AppContext'
 import ResultsListItem from './ResultsListItem'
-import { ProductsListItem } from './ProductsListItem'
+import ProductsListItem from './ProductsListItem'
 import { SLU_STATE } from '../sg'
-import Onboarding from './Onboarding'
-
-const getProductImages = product => {
-  let productImages = {}
-  if (product) {
-    productImages = {
-      image: product.imageUrl
-    }
-    product.images &&
-      product.images.forEach(productImage => {
-        productImages[productImage.type] = productImage.url
-      })
-  }
-  return productImages
-}
+import InfoContainer from './InfoContainer'
+import Introduction from './Introduction'
+import { ProductInfo } from './ProductInfo'
 
 export default class ResultsList extends React.Component {
   render() {
@@ -41,10 +29,12 @@ export default class ResultsList extends React.Component {
             hoveredProduct,
             sluState
           }) => {
-            const showOnboarding = !currentInterimItems.length && !finalItems.length
+            const noAudio = sluState === SLU_STATE.noAudioConsent
+            const showOnboarding =
+              !currentInterimItems.length && !finalItems.length && !noAudio
             const listClass = `results ${
               subViewOpen ? 'results--transitionoffset' : ''
-            } ${showOnboarding ? 'hidden' : ''}`
+            } ${showOnboarding || noAudio ? 'hidden' : ''}`
             const subViewClass = `subview ${
               !subViewOpen ? 'subview--transitionoffset' : ''
             }`
@@ -54,10 +44,25 @@ export default class ResultsList extends React.Component {
               this.rootDiv.current.scrollTop = 0
             }
 
-            let infoProductImageUrls = getProductImages(infoProduct)
             return (
               <>
-                {showOnboarding && <Onboarding step={sluState !== 'Recording' ? 1 : 2} />}
+                {noAudio && (
+                  <InfoContainer>
+                    <h1>This app requires mic audio</h1>
+                    <p>
+                      Refresh the page and give consent to the microphone to continue.
+                    </p>
+                  </InfoContainer>
+                )}
+                {showOnboarding && (
+                  <InfoContainer>
+                    {sluState !== SLU_STATE.recording ? (
+                      <Introduction></Introduction>
+                    ) : (
+                      <h1>Speak...</h1>
+                    )}
+                  </InfoContainer>
+                )}
                 <div className={listClass} ref={this.rootDiv}>
                   <ul className={'results--list'}>
                     {[...currentInterimItems, ...finalItems]
@@ -92,21 +97,7 @@ export default class ResultsList extends React.Component {
                 <div className={subViewClass}>
                   {subViewItem && (
                     <div className="subview__innercontainer">
-                      <div className="subview__product-info">
-                        <picture>
-                          <source
-                            media="(min-width: 400px)"
-                            srcset={infoProductImageUrls.large}
-                          />
-                          <img src={infoProductImageUrls.imageUrl} alt="" />
-                        </picture>
-                        <div className="subview__product-info__text">
-                          <h1>{infoProduct.displayText}</h1>
-                          <p>
-                            {infoProduct.amount} {infoProduct.unitName}
-                          </p>
-                        </div>
-                      </div>
+                      <ProductInfo product={infoProduct} />
                       <ul>
                         {subViewItem.products.map(product => (
                           <ProductsListItem

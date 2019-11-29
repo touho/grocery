@@ -64,7 +64,8 @@ export const SLU_STATE = {
   notConnected: "Connect",
   connecting: "Connecting",
   ready: "Record",
-  recording: "Recording"
+  recording: "Recording",
+  noAudioConsent: "NoConsent"
 };
 
 export function slu() {
@@ -97,6 +98,9 @@ export function slu() {
         .catch(err => {
           console.error(err);
           context.onstatus("Error: " + err);
+          if(err.name === 'NotAllowedError') {
+            context.onstatechange(SLU_STATE.noAudioConsent);
+          }
         });
     }
   };

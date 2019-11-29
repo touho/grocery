@@ -2,7 +2,7 @@ import React from 'react'
 import { listItemBackgroundStyle } from './ResultsListItem'
 import { Trash } from './icons/Trash'
 import classNames from 'classnames'
-export function ProductsListItem({
+export default function ProductsListItem({
   product,
   transcript,
   onItemSelected,
@@ -17,7 +17,9 @@ export function ProductsListItem({
   isHoveredProduct = false,
   isActiveUtterance = false
 }) {
-  const { amount = '', displayText = '', unitName = '', imageUrl, productID } = product
+  const { amount = '', displayText = '', unitName = '', images, productID } = product
+  const mediumImages = images && images.filter(image => image.type === 'medium')
+  const imageUrl = mediumImages ? mediumImages[0].url : product.imageUrl
   const itemClassName = classNames(
     'list-item',
     {
@@ -42,7 +44,6 @@ export function ProductsListItem({
             }
           }}
           onClick={event => {
-            console.log(event.target.className)
             if (
               event.target.className !== '' &&
               event.target.className.indexOf('list-item__quantity') < 0
@@ -51,45 +52,75 @@ export function ProductsListItem({
             }
           }}
         >
-          <div className="list-item-img">
-            <div
-              className="list-item-img__bg"
-              alt="product"
-              style={listItemBackgroundStyle(imageUrl)}
-            />
-          </div>
+          <ProductItemImage
+            listItemBackgroundStyle={listItemBackgroundStyle}
+            imageUrl={imageUrl}
+          />
           <div className="list-item__info">
             {transcript && <div className={utteranceClassName}>{transcript}</div>}
             <div className={'list-item__info--title'}>{displayText}</div>
           </div>
-          <div className="list-item__quantity">
-            {showFunctions && (
-              <button
-                className="list-item__quantity"
-                onClick={event => {
-                  if (event.target.className.indexOf('list-item__quantity' === 0)) {
-                    onItemFocused(event)
-                  }
-                }}
-              >
-                <div className="list-item__quantity--title">{amount}</div>
-                <div className="list-item__quantity--secondary">{unitName}</div>
-              </button>
-            )}
-          </div>
+          <ProductItemQuantity
+            showFunctions={showFunctions}
+            onItemFocused={onItemFocused}
+            amount={amount}
+            unitName={unitName}
+          />
         </div>
-        <div
-          className={`list-item__functions ${
-            isSelected ? 'list-item__functions__selected' : ''
-          }`}
-        >
-          <button onClick={onItemRemove}>
-            <Trash />
-          </button>
-          <button onClick={onItemDecrease}>-</button>
-          <button onClick={onItemIncrease}>+</button>
-        </div>
+        <ProductItemFunctions
+          isSelected={isSelected}
+          onItemRemove={onItemRemove}
+          onItemDecrease={onItemDecrease}
+          onItemIncrease={onItemIncrease}
+        />
       </li>
     )
   )
 }
+
+const ProductItemImage = ({ listItemBackgroundStyle, imageUrl }) => (
+  <div className="list-item-img">
+    <div
+      className="list-item-img__bg"
+      alt="product"
+      style={listItemBackgroundStyle(imageUrl)}
+    />
+  </div>
+)
+
+const ProductItemFunctions = ({
+  isSelected,
+  onItemRemove,
+  onItemDecrease,
+  onItemIncrease
+}) => (
+  <div
+    className={`list-item__functions ${
+      isSelected ? 'list-item__functions__selected' : ''
+    }`}
+  >
+    <button onClick={onItemRemove}>
+      <Trash />
+    </button>
+    <button onClick={onItemDecrease}>-</button>
+    <button onClick={onItemIncrease}>+</button>
+  </div>
+)
+
+const ProductItemQuantity = ({ showFunctions, onItemFocused, amount, unitName }) => (
+  <div className="list-item__quantity">
+    {showFunctions && (
+      <button
+        className="list-item__quantity"
+        onClick={event => {
+          if (event.target.className.indexOf('list-item__quantity' === 0)) {
+            onItemFocused(event)
+          }
+        }}
+      >
+        <div className="list-item__quantity--title">{amount}</div>
+        <div className="list-item__quantity--secondary">{unitName}</div>
+      </button>
+    )}
+  </div>
+)
