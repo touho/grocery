@@ -175,10 +175,10 @@ export function slu() {
     ws[kStop] = () => {
       ws.send(JSON.stringify({ event: "stop" }));
       isRecording = false;
-      timeoutHandle = setTimeout(timeout, 30000);
+      timeoutHandle = setTimeout(timeout, 600000);
     };
 
-    timeoutHandle = setTimeout(timeout, 30000);
+    timeoutHandle = setTimeout(timeout, 600000);
     return ws;
   }
 
