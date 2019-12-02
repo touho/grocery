@@ -71,14 +71,34 @@ h1 {
     }
     &__logo {
       opacity: 0;
-      transition: opacity 0.2s;
+      transition: opacity 0.3s;
       transition-timing-function: ease-in-out;
       margin-top: 10px;
       @media only screen and (min-width: 768px) {
         margin-top: 15px;
       }
+      svg {
+        transition: opacity 0.3s;
+        transition-timing-function: ease-in-out;
+      }
       &--active {
         opacity: 1;
+      }
+      &--passive {
+        svg {
+          opacity: 0.2;
+        }
+      }
+      &__connecting {
+        position: absolute;
+        font-weight: 600;
+        color: white;
+        font-size: 30px;
+        left: 50%;
+        width: 250px;
+        margin-left: -125px;
+        height: 70px;
+        margin-top: 20px;
       }
     }
   }
@@ -348,14 +368,18 @@ h1 {
     }
 
     &__active {
+      transform-origin: bottom center;
       svg {
         fill: #515050;
+        transform-origin: bottom center;
       }
       &-pressed {
         svg {
           transform-origin: bottom center;
           fill: #ff0000;
-          transform: scale(3.2) !important;
+          transform: scale(
+            2.5
+          ) !important; //important is required to override the more specific :hover selector
         }
       }
     }

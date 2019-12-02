@@ -1,29 +1,48 @@
-import React from 'react'
-import AppContext from './context/AppContext'
+import React, { Component } from 'react'
 import { RecordingWave } from './components/icons/RecordingWave'
 import Logo from './logo.jpg'
-export default function Header() {
-  return (
-    <AppContext.Consumer>
-      {({ sluState }) => (
-        <header className="header">
-          <div>
-            <img
-              src={Logo}
-              alt=""
-              className={`header__logo ${
-                sluState !== 'Recording' ? 'header__logo--active' : ''
-              }`}
-            />
-            <RecordingWave
-              className={`header__logo ${
-                sluState === 'Recording' ? 'header__logo--active' : ''
-              }`}
-            />
-          </div>
-          <div></div>
-        </header>
-      )}
-    </AppContext.Consumer>
-  )
+import { SLU_STATE } from './sg'
+import classNames from 'classnames'
+export default class Header extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { sluState: SLU_STATE.notConnected, connecting: false }
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.sluState !== this.props.sluState) {
+      this.setState({ connecting: true })
+      if (this.props.sluState === SLU_STATE.recording) {
+        setTimeout(() => {
+          this.setState({ sluState: this.props.sluState, connecting: false })
+        }, 700)
+      } else {
+        this.setState({ sluState: this.props.sluState, connecting: false })
+      }
+    }
+  }
+
+  render() {
+    const { sluState, connecting } = this.state
+    const waveClassName = classNames('header__logo', {
+      'header__logo--passive': connecting,
+      'header__logo--active':
+        (connecting && sluState !== 'Recording') || sluState === 'Recording'
+    })
+    const logoClassName = classNames('header__logo', {
+      'header__logo--active': !connecting && sluState !== 'Recording'
+    })
+    return (
+      <header className="header">
+        <div>
+          <img src={Logo} alt="" className={logoClassName} />
+          <RecordingWave className={waveClassName}>
+            {connecting && (
+              <span className="header__logo__connecting">Connecting...</span>
+            )}
+          </RecordingWave>
+        </div>
+        <div></div>
+      </header>
+    )
+  }
 }

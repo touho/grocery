@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
-import { AppContextProvider } from './context/AppContext'
+import AppContext, { AppContextProvider } from './context/AppContext'
 import './App.scss'
 import Header from './Header'
 import FunctionButtons from './FunctionButtons'
 import ResultsList from './components/ResultsList'
 import * as SLUFunctions from './sg'
-class App extends Component {
+export default class App extends Component {
   render() {
     return (
       <AppContextProvider sluContext={SLUFunctions.slu()}>
         <div className="app">
-          <Header />
+          <AppContext.Consumer>
+            {({ sluState }) => <Header sluState={sluState} />}
+          </AppContext.Consumer>
           <ResultsList />
           <FunctionButtons />
         </div>
@@ -18,5 +20,3 @@ class App extends Component {
     )
   }
 }
-
-export default App

@@ -55,5 +55,6 @@ export const RecordingWave = props => (
         d="M48.91,15l-0.12,0A1,1,0,0,0,48,16v6a1,1,0,1,0,2,0s0,0,0,0V16a1,1,0,0,0-1-1H48.91Z"
       />
     </svg>
+    {props.children}
   </div>
 )
