@@ -1,6 +1,28 @@
 $accent-color: #a80021;
-$functions-color: #e1e2e1;
-$text-color: #1e0003;
-$border-color: #faf7f7;
-$theme-color: #faf7f7;
-$light-theme-color: #ece8e8;
+$text-color: darken(
+  $color: $accent-color,
+  $amount: 25%
+);
+$mic-fill-color: lighten(
+  $color: $accent-color,
+  $amount: 15%
+);
+$function-button-fill: desaturate(
+  $color: $accent-color,
+  $amount: 85%
+);
+$border-color: adjust-color(
+  $color: $accent-color,
+  $lightness: 65%,
+  $saturation: -80%
+);
+$light-theme-color: adjust-color(
+  $color: $accent-color,
+  $lightness: 60%,
+  $saturation: -80%
+);
+
+$dark-theme-color: adjust-color(
+  $color: $accent-color,
+  $lightness: -20%
+);

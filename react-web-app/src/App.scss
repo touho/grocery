@@ -6,12 +6,6 @@
 @import './components/TapNotification.scss';
 
 $mobile-padding: 15px;
-
-@font-face {
-  font-family: $base-font-family;
-  src: url('./assets/brixslab-regular.woff');
-}
-
 body {
   font-family: $base-font-family;
 }
@@ -54,7 +48,8 @@ h1 {
     width: 100%;
     flex-shrink: 0;
     z-index: 2;
-    box-shadow: 3px 3px 8px 0px #d99da1;
+    box-shadow: 3px 3px 8px 0px
+      adjust-color($color: $accent-color, $lightness: 30%, $saturation: -50%);
     height: 80px;
     @media only screen and (min-width: 768px) {
       height: 120px;
@@ -143,7 +138,7 @@ h1 {
         border-left: 12px solid $accent-color;
       }
       &--hovered {
-        border-left: 12px solid $functions-color;
+        border-left: 12px solid $light-theme-color;
       }
       &-main {
         display: flex;
@@ -165,11 +160,11 @@ h1 {
           transition: all 0.5s;
           transition-timing-function: ease-in-out;
           display: inline-block;
-          color: #892929;
+          color: $dark-theme-color;
           margin-bottom: 10px;
           padding: 6px;
           font-size: 12px;
-          background-color: #efe5e7;
+          background-color: $light-theme-color;
           border-radius: 10px;
           &--active {
             transition: all 1s;
@@ -193,7 +188,7 @@ h1 {
           font-size: 14px;
           border: none;
           margin-right: -15px;
-          background: #f4f4f4;
+          background: $light-theme-color;
           margin-left: 10px;
           display: flex;
           flex-direction: column;
@@ -222,7 +217,7 @@ h1 {
             visibility: visible;
             font-size: 26px;
             width: 100%;
-            background-color: #f4f4f4;
+            background-color: $light-theme-color;
             border: 1px solid white;
             svg {
               width: 20px;
@@ -340,7 +335,7 @@ h1 {
       }
     }
     svg {
-      fill: #515050;
+      fill: $function-button-fill;
       outline: none;
       transition: all 0.5s;
       transition-timing-function: ease-in-out;
@@ -358,7 +353,7 @@ h1 {
       }
       svg {
         max-height: 5vh;
-        fill: #515050;
+        fill: $function-button-fill;
         width: 40%;
         @media only screen and (min-width: 768px) {
           width: 80%;
@@ -372,13 +367,13 @@ h1 {
     &__active {
       transform-origin: bottom center;
       svg {
-        fill: #515050;
+        fill: $function-button-fill;
         transform-origin: bottom center;
       }
       &-pressed {
         svg {
           transform-origin: bottom center;
-          fill: #ff0000;
+          fill: $mic-fill-color;
           transform: scale(
             2.5
           ) !important; //important is required to override the more specific :hover selector
