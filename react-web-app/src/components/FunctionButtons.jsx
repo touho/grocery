@@ -22,20 +22,28 @@ export default function FunctionButtons() {
         <>
           <TapNotification isTapping={isTapping} />
           <footer>
-            {subViewOpen ? (
-              <Back
-                disabled={!(finalItems && finalItems.length)}
-                onBack={() => toggleItemSubView(null)}
+            <div className="functions-container">
+              {subViewOpen ? (
+                <Back
+                  disabled={!(finalItems && finalItems.length)}
+                  onBack={() => toggleItemSubView(null)}
+                />
+              ) : (
+                <Clear
+                  disabled={!(finalItems && finalItems.length)}
+                  onClear={clearList}
+                />
+              )}
+              <Mic
+                onUp={event => stopSpeaking(event)}
+                onDown={event => startSpeaking(event)}
+                sluState={sluState}
               />
-            ) : (
-              <Clear disabled={!(finalItems && finalItems.length)} onClear={clearList} />
-            )}
-            <Mic
-              onUp={event => stopSpeaking(event)}
-              onDown={event => startSpeaking(event)}
-              sluState={sluState}
-            />
-            <AddToCart disabled={!(finalItems && finalItems.length)} onAdd={addToCart} />
+              <AddToCart
+                disabled={!(finalItems && finalItems.length)}
+                onAdd={addToCart}
+              />
+            </div>
           </footer>
         </>
       )}
