@@ -24,7 +24,8 @@ const defaultState = {
   subViewOpen: false,
   focusedItem: undefined,
   hoveredProduct: undefined,
-  recordButtonIsPressed: false
+  recordButtonIsPressed: false,
+  isTapping: false
 }
 
 const AppContext = React.createContext(defaultState)
@@ -113,12 +114,25 @@ class AppContextProvider extends Component {
   stopSpeaking = event => {
     this.toggleRecordButtonState(false)
     this.stopRecording(event)
+    const { recordButtonIsPressedStarted, recordButtonIsPressedStopped } = this.state
+    if (recordButtonIsPressedStarted && recordButtonIsPressedStopped) {
+      this.setState({
+        isTapping: recordButtonIsPressedStopped - recordButtonIsPressedStarted < 1000
+      })
+    }
   }
 
   toggleRecordButtonState = (recordButtonIsPressed, callback) => {
     this.setState(
       {
-        recordButtonIsPressed
+        isTapping: false,
+        recordButtonIsPressed,
+        recordButtonIsPressedStarted: recordButtonIsPressed
+          ? new Date()
+          : this.state.recordButtonIsPressedStarted,
+        recordButtonIsPressedStopped: !recordButtonIsPressed
+          ? new Date()
+          : this.state.recordButtonIsPressedStopped
       },
       callback
     )

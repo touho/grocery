@@ -1,17 +1,19 @@
 @import './reset.css';
 @import './components/Colors.scss';
+@import './components/Variables.scss';
 @import './components/icons/RecordingWave.scss';
 @import './components/InfoContainer.scss';
+@import './components/TapNotification.scss';
 
 $mobile-padding: 15px;
 
 @font-face {
-  font-family: 'BrixSlabRegular';
-  src: url('./brixslab-regular.woff');
+  font-family: $base-font-family;
+  src: url('./assets/brixslab-regular.woff');
 }
 
 body {
-  font-family: 'BrixSlabRegular';
+  font-family: $base-font-family;
 }
 
 html,
@@ -128,9 +130,9 @@ h1 {
     max-width: 1024px;
     display: flex;
     width: 100%;
-    -webkit-box-shadow: 3px 3px 16px 0px rgba(207, 207, 207, 1);
-    -moz-box-shadow: 3px 3px 16px 0px rgba(207, 207, 207, 1);
-    box-shadow: 3px 3px 16px 0px rgba(207, 207, 207, 1);
+    -webkit-box-shadow: $light-shadow;
+    -moz-box-shadow: $light-shadow;
+    box-shadow: $light-shadow;
 
     .list-item {
       cursor: pointer;
@@ -185,7 +187,7 @@ h1 {
       }
       &__quantity {
         button {
-          font-family: 'BrixSlabRegular';
+          font-family: $base-font-family;
           width: 80px;
           height: 100%;
           font-size: 14px;

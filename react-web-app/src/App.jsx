@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import AppContext, { AppContextProvider } from './context/AppContext'
 import './App.scss'
-import Header from './Header'
-import FunctionButtons from './FunctionButtons'
+import Header from './components/Header'
+import FunctionButtons from './components/FunctionButtons'
 import ResultsList from './components/ResultsList'
 import * as SLUFunctions from './sg'
 export default class App extends Component {

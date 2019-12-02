@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { RecordingWave } from './components/icons/RecordingWave'
-import Logo from './logo.jpg'
-import { SLU_STATE } from './sg'
+import { RecordingWave } from './icons/RecordingWave'
+import Logo from '../assets/logo.jpg'
+import { SLU_STATE } from '../sg'
 import classNames from 'classnames'
 export default class Header extends Component {
   constructor(props) {
