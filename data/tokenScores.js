@@ -159,7 +159,7 @@ const login = () => {
     }
     const identity = new SgGrpc.speechgrinder.sgapi.v1.Identity(sgApiUrl, creds);
     const wlu = new SgGrpc.speechgrinder.sgapi.v1.Wlu(sgApiUrl, creds);
-    const deviceId = "fineli-lemmatizer";
+    const deviceId = "grocery-data-script-lemmatizer-device-id";
     identity.login({ appId, deviceId }, (err, response) => {
       if (err) {
         return reject(err);
