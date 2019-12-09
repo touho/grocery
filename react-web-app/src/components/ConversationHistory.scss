@@ -1,0 +1,36 @@
+.ConversationHistory {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: center;
+  width: 100%;
+  margin-top: -10vh;
+  &__item {
+    border-radius: 0px 20px 20px 0px;
+    background-color: $light-theme-color;
+    padding: 12px;
+    margin-bottom: 3vh;
+    text-align: left;
+    font-size: 12px;
+    @media only screen and (min-width: 768px) {
+      font-size: 16px;
+      padding: 20px;
+      border-radius: 0px 30px 30px 0px;
+    }
+    em {
+      font-size: 16px;
+      @media only screen and (min-width: 768px) {
+        font-size: 20px;
+      }
+    }
+    &--reply {
+      align-self: end;
+      background-color: $light-theme-color-secondary;
+      font-style: italic;
+      border-radius: 20px 0px 0px 20px;
+      @media only screen and (min-width: 768px) {
+        border-radius: 30px 0px 0px 30px;
+      }
+    }
+  }
+}

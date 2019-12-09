@@ -4,7 +4,7 @@ import ResultsListItem from './ResultsListItem'
 import ProductsListItem from './ProductsListItem'
 import { SLU_STATE } from '../sg'
 import InfoContainer from './InfoContainer'
-import Introduction from './Introduction'
+import ConversationHistory from './ConversationHistory'
 import { ProductInfo } from './ProductInfo'
 
 export default class ResultsList extends React.Component {
@@ -54,13 +54,11 @@ export default class ResultsList extends React.Component {
                     </p>
                   </InfoContainer>
                 )}
-                {showOnboarding && (
+                {showOnboarding && sluState !== SLU_STATE.recording ? (
+                  <ConversationHistory></ConversationHistory>
+                ) : (
                   <InfoContainer>
-                    {sluState !== SLU_STATE.recording ? (
-                      <Introduction></Introduction>
-                    ) : (
-                      <h1>Speak...</h1>
-                    )}
+                    <h1>Speak...</h1>
                   </InfoContainer>
                 )}
                 <div className={listClass} ref={this.rootDiv}>
