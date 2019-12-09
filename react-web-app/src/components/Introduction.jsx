@@ -10,7 +10,7 @@ const Introduction = () => (
       While holding, <em>speak your items as a list</em> to the mic:
     </div>
     <div className="italic">”apples, oranges, potato chips”</div>
-    <div>The cart icon will add your items to your SuperValu trolley</div>
+    <div>The cart icon will add your items to your trolley</div>
     <div>Enjoy shopping!</div>
   </>
 )

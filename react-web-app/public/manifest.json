@@ -1,6 +1,6 @@
 {
-  "short_name": "ShopValu, Musgrave, speak your list",
-  "name": "ShopValu, Musgrave, speak your list",
+  "short_name": "Grocery list sample app",
+  "name": "Grocery list sample app",
   "icons": [
     {
       "src": "favicon.ico",
@@ -11,5 +11,5 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#f6f4ef"
+  "background_color": "#32a8d7"
 }

@@ -1,11 +1,12 @@
 //COLORS
-$accent-color: #a80021;
+$accent-color: #32a8d7;
+$mic-color: #ff0000;
 $text-color: darken(
   $color: $accent-color,
   $amount: 25%
 );
 $mic-fill-color: lighten(
-  $color: $accent-color,
+  $color: $mic-color,
   $amount: 15%
 );
 $function-button-fill: desaturate(
@@ -19,7 +20,7 @@ $border-color: adjust-color(
 );
 $light-theme-color: adjust-color(
   $color: $accent-color,
-  $lightness: 60%,
+  $lightness: 40%,
   $saturation: -85%
 );
 
@@ -30,8 +31,4 @@ $dark-theme-color: adjust-color(
 $light-shadow: 3px 3px 16px 0px rgba(207, 207, 207, 1);
 
 //FONTS
-$base-font-family: 'BrixSlabRegular';
-@font-face {
-  font-family: $base-font-family;
-  src: url('../assets/brixslab-regular.woff');
-}
+$base-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
