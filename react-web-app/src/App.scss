@@ -26,6 +26,10 @@ body,
   display: none;
 }
 
+.stroke {
+  stroke: $function-button-fill;
+}
+
 button {
   color: $text-color;
 }
@@ -346,9 +350,7 @@ h1 {
     }
     svg {
       fill: $function-button-fill;
-      .stroke {
-        stroke: $function-button-fill;
-      }
+
       outline: none;
       transition: all 0.5s;
       transition-timing-function: ease-in-out;
