@@ -72,8 +72,7 @@ export class Mic extends React.Component {
           this.props.sluState === SLU_STATE.recording
       },
       {
-        'function-button__active-pressed':
-          this.props.sluState === SLU_STATE.recording
+        'function-button__active-pressed': this.props.sluState === SLU_STATE.recording
       }
     )
     return (

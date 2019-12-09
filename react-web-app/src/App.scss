@@ -345,6 +345,9 @@ h1 {
     }
     svg {
       fill: $function-button-fill;
+      .stroke {
+        stroke: $function-button-fill;
+      }
       outline: none;
       transition: all 0.5s;
       transition-timing-function: ease-in-out;
