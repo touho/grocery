@@ -113,6 +113,7 @@ h1 {
     &--list {
       overflow: hidden;
       position: relative;
+      margin-bottom: 10vh;
       @media only screen and (min-width: 768px) {
         padding-right: 20px;
       }

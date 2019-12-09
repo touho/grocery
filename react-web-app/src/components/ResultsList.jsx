@@ -54,13 +54,14 @@ export default class ResultsList extends React.Component {
                     </p>
                   </InfoContainer>
                 )}
-                {showOnboarding && sluState !== SLU_STATE.recording ? (
-                  <ConversationHistory></ConversationHistory>
-                ) : (
-                  <InfoContainer>
-                    <h1>Speak...</h1>
-                  </InfoContainer>
-                )}
+                {showOnboarding &&
+                  (sluState !== SLU_STATE.recording ? (
+                    <ConversationHistory></ConversationHistory>
+                  ) : (
+                    <InfoContainer>
+                      <h1>Speak...</h1>
+                    </InfoContainer>
+                  ))}
                 <div className={listClass} ref={this.rootDiv}>
                   <ul className={'results--list'}>
                     {[...currentInterimItems, ...finalItems]
