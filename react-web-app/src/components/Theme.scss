@@ -1,3 +1,4 @@
+//COLORS
 $accent-color: #a80021;
 $text-color: darken(
   $color: $accent-color,
@@ -19,10 +20,18 @@ $border-color: adjust-color(
 $light-theme-color: adjust-color(
   $color: $accent-color,
   $lightness: 60%,
-  $saturation: -80%
+  $saturation: -85%
 );
 
 $dark-theme-color: adjust-color(
   $color: $accent-color,
   $lightness: -20%
 );
+$light-shadow: 3px 3px 16px 0px rgba(207, 207, 207, 1);
+
+//FONTS
+$base-font-family: 'BrixSlabRegular';
+@font-face {
+  font-family: $base-font-family;
+  src: url('../assets/brixslab-regular.woff');
+}
