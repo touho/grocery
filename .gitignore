@@ -2,3 +2,5 @@ node_modules/
 .DS_Store
 .idea/
 data/.DS_Store
+www
+!www/simple

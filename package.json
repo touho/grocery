@@ -7,10 +7,17 @@
     "url": "https://github.com/speechgrinder/grocery.git"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "npm run build && node index.js",
+    "postinstall": "npm run ui:install",
+    "build": "npm run ui:build && npm run ui:deploy",
+    "ui:install": "npm --prefix ./react-web-app install",
+    "ui:build": "npm --prefix ./react-web-app run build",
+    "ui:deploy": "cp -r react-web-app/build/* www/"
   },
   "dependencies": {
     "@grpc/proto-loader": "^0.5.1",
+    "@hapi/joi": "^16.1.7",
+    "classnames": "^2.2.6",
     "express": "^4.17.1",
     "grpc": "^1.21.1",
     "query-string": "^6.7.0",

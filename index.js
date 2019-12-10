@@ -8,13 +8,19 @@ const grpc = require("grpc");
 const crypto = require("crypto");
 const wav = require("wav");
 const path = require("path");
-
+const schema = require("./schema");
 const logger = console;
 
+const shouldEnforceSchema = process.env.ASSERT_SCHEMA == "true";
 const appId = process.env.APP_ID;
 if (appId === undefined) {
   throw new Error("APP_ID environment variable needs to be set");
 }
+
+// you can tune alpha between 0.0 - 1.0 to control how much
+// the product score influences which utterance alternative is selected
+const alpha = process.env.ALPHA ? parseFloat(process.env.ALPHA) : 0.1;
+console.log("alpha", alpha);
 
 const wavFilePath = process.env.RECORD_WAV;
 const isWavRecorderEnabled = !!wavFilePath;
@@ -25,7 +31,7 @@ if (process.env.SG_API_URL) {
   sgApiUrl = process.env.SG_API_URL;
   creds = grpc.credentials.createInsecure();
 } else {
-  sgApiUrl = "api.speechgrinder.com";
+  sgApiUrl = "api.speechly.com";
   creds = grpc.credentials.createSsl();
 }
 
@@ -52,11 +58,11 @@ const errors = {
 
 const processError = websocket => error => {
   if (websocket.readyState === 1) {
-    if (error.code == 11) {
+    if (error && error.code == 11) {
       logger.error(error.details);
       return;
     }
-    logger.error(error);
+    logger.error("Error caught:", error);
     logger.error("Sending error message to client...");
     websocket.send(JSON.stringify({ event: "error", data: { error: error.message, code: "G01" } }));
     logger.error("Closing websocket...");
@@ -136,7 +142,7 @@ const findSegments = utterance => {
 const findSegmentsWithProducts = (utterance, language) => {
   try {
     const segments = findSegments(utterance);
-    const queriesForSegments = segments.map(tokens => createProductQuery(tokens, getEntitySpans(tokens), language, 5));
+    const queriesForSegments = segments.map(tokens => createProductQuery(tokens, getEntitySpans(tokens), language, 25));
     return queriesForSegments.map(query => productSearch.queryProducts(query));
   } catch (err) {
     logger.debug("Failed to handle product query");
@@ -158,10 +164,6 @@ const parseProductSegments = utteranceData => {
     findSegmentsWithProducts(alternative, language)
   );
   const scores = softMax(alternativeSegments.map(alt => alt.map(seg => seg.score).reduce((x, y) => x + y, 0.0)));
-
-  // you can tune alpha between 0.0 - 1.0 to control how much
-  // the product score influences which utterance alternative is selected
-  const alpha = 0.1;
   const bestSegments =
     alternativeSegments.length > 0
       ? alternativeSegments
@@ -221,6 +223,19 @@ class WavWriter {
 }
 
 const processData = (websocket, wavWriter) => {
+  const send = (obj) => {
+    try {
+      if (shouldEnforceSchema) {
+        schema.assert(obj);
+      }
+      websocket.send(JSON.stringify(obj));
+    } catch (err) {
+      if (err.details) {
+        return processError(websocket)(err.details);
+      }
+      processError(websocket)(err);
+    }
+  };
   return data => {
     if (websocket.readyState !== 1) {
       // client websocket is not writable, ignore result
@@ -228,24 +243,18 @@ const processData = (websocket, wavWriter) => {
     }
     if (data.started !== undefined) {
       // slu api returns an utterance id
-      websocket.send(JSON.stringify({ event: "started", data: data.started }));
+      send({ event: "started", data: data.started });
       wavWriter.start(data.started.utteranceId);
     } else if (data.finished !== undefined) {
-      websocket.send(JSON.stringify({ event: "stopped", data: data.finished }));
+      send({ event: "stopped", data: data.finished });
       wavWriter.stop(data.finished.utteranceId);
     } else {
       const productSegments = parseProductSegments(data.utterance);
       if (websocket.readyState === 1 && !R.isEmpty(productSegments)) {
-        try {
-          websocket.send(
-            JSON.stringify({
-              event: "transcription",
-              data: { utteranceId: data.utterance.utteranceId, type: data.utterance.type, segments: productSegments }
-            })
-          );
-        } catch (err) {
-          processError(websocket)(err);
-        }
+        send({
+          event: "transcription",
+          data: { utteranceId: data.utterance.utteranceId, type: data.utterance.type, segments: productSegments }
+        });
       }
     }
   };
@@ -434,11 +443,21 @@ process.on("SIGTERM", shutdown);
 process.on("SIGINT", shutdown);
 
 const httpApp = express();
-httpApp.get("/", (req, res) => {
-  const baseUrl = req.headers["x-envoy-original-path"] || req.baseUrl;
-  res.redirect(baseUrl + "/index.html");
+httpApp.use(express.static(path.join(__dirname, "www")));
+
+httpApp.get("/ping", function(req, res) {
+  return res.send("pong");
 });
-httpApp.use(express.static("www", { index: false }));
+
+const checkoutUrl = process.env.CHECKOUT_URL;
+httpApp.get("/checkout", function(req, res) {
+  const selectedProductIds = Object.keys(req.query).join(",");
+  return res.redirect(`${checkoutUrl}${selectedProductIds}`);
+});
+
+httpApp.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, "www", "index.html"));
+});
 
 const httpServer = http.createServer(httpApp);
 bindWebSocket(httpServer);

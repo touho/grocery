@@ -1,0 +1,31 @@
+//COLORS
+$accent-color: #32a8d7;
+$mic-color: #ff0000;
+$text-color: darken(
+  $color: $accent-color,
+  $amount: 25%
+);
+$mic-fill-color: lighten(
+  $color: $mic-color,
+  $amount: 15%
+);
+$function-button-fill: desaturate(
+  $color: $accent-color,
+  $amount: 85%
+);
+$border-color: adjust-color(
+  $color: $accent-color,
+  $lightness: 65%,
+  $saturation: -80%
+);
+$light-theme-color: #f2f3ee;
+$light-theme-color-secondary: #d2eef7;
+
+$dark-theme-color: adjust-color(
+  $color: $accent-color,
+  $lightness: -20%
+);
+$light-shadow: 3px 3px 16px 0px rgba(207, 207, 207, 1);
+
+//FONTS
+$base-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
