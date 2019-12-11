@@ -142,6 +142,7 @@ h1 {
       &--selected {
         border-left: 12px solid $accent-color;
       }
+      &:hover,
       &--hovered {
         border-left: 12px solid $light-theme-color;
       }
