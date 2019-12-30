@@ -43,12 +43,17 @@ const parse = (wlu, authToken, text, languageCode) => {
 };
 
 const createSGApiCall = (wlu, authToken) => (entry, accum, language) => {
-  const synonymIndex = 1 + entry.tags.length;
-  const names = [entry.name].concat(entry.tags).concat(entry.synonyms);
+  const nameSynonymIndex = 1 + entry.tags.length;
+  const tagSynonymIndex = 1 + entry.tags.length + entry.nameSynonyms.length;
+  const names = [entry.name]
+    .concat(entry.tags)
+    .concat(entry.nameSynonyms)
+    .concat(entry.tagSynonyms);
+
   return Promise.all(names.map(name => parse(wlu, authToken, name, getLanguageCode(language)))).then(parses => {
     accum.push({
-      name: parses[0].concat(parses.slice(synonymIndex).flatMap(x => x)),
-      tags: parses.slice(1, synonymIndex)
+      name: parses[0].concat(parses.slice(nameSynonymIndex, tagSynonymIndex).flatMap(x => x)),
+      tags: parses.slice(1, nameSynonymIndex).concat(parses.slice(tagSynonymIndex))
     });
     return accum;
   });
@@ -124,7 +129,8 @@ const makeIndex = (data, apiCall, language, bar, coef, getLemmas, format, expand
     return {
       name: format(entry.name),
       tags: (entry.tags || []).map(tag => format(tag)),
-      synonyms: expand(entry.name)
+      nameSynonyms: expand(entry.name.toLowerCase().split(" ")),
+      tagSynonyms: expand(entry.tags)
     };
   });
   return analyse(entries, apiCall, language, bar).then(nluForEntries => {
@@ -185,8 +191,7 @@ const replaceWith = replacements => name => {
   return replacements.reduce((x, y) => x.replace(new RegExp(y[0], "g"), y[1]), name.toLowerCase());
 };
 
-const expandWith = synonyms => name => {
-  const tokens = name.toLowerCase().split(" ");
+const expandWith = synonyms => tokens => {
   return (tokensToAppend = Object.keys(synonyms)
     .filter(synonym => R.contains(synonym, tokens))
     .flatMap(synonym => synonyms[synonym]));

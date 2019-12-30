@@ -98,7 +98,7 @@ const createProductQuery = (tokens, entitySpans, lang, maxProducts) => {
   return {
     transcript: tokens.map(token => token.textWithTrailingSpace).join(""),
     query: queryTokens.map(token => token.textWithTrailingSpace).join(""),
-    normalizedQuery: queryTokens.map(token => token.lemma.replace("#", "")).join(" "),
+    normalizedQuery: queryTokens.map(token => token.lemma).join(" "),
     compounds: queryTokens.flatMap(token => token.lemma.split("#")),
     amount: amount,
     unit: unit,
