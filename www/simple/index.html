@@ -60,6 +60,7 @@
       }
 
       window.onload = function() {
+        // SLU
         const s = slu();
         s.ontranscription = ontranscription;
         s.onstatus = status => {
@@ -73,10 +74,48 @@
         recordDiv.addEventListener("mouseup", s.stop);
         recordDiv.addEventListener("touchstart", s.start);
         recordDiv.addEventListener("touchend", s.stop);
+
+        // WLU
+        const searchInput = document.getElementById("textInput");
+        const w = wlu();
+        w.ontranscription = ontranscription;
+        let searchStringChanges = false
+        function doTextSearch() {
+          if (!searchStringChanges) return
+          searchStringChanges = false
+          w.search(searchInput.value)
+        }
+        searchInput.addEventListener("keydown", event => {
+          if (event.key === "Enter") {
+            event.preventDefault()
+            searchStringChanges = true
+            doTextSearch()
+          }
+        })
+        searchInput.addEventListener("change", doTextSearch)
+        searchInput.addEventListener("input", () => searchStringChanges = true)
+
+        // Login
+        async function login() {
+          let { token } = await (await fetch('/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          })).json()
+          // Token is also added to cookie
+          localStorage.token = token
+        }
+        // Login should be done when websocket connection or endpoint fails because of expired token.
+        // For simplicity, we do it on every page load here.
+        // Token is stored in cookies.
+        login()
       };
+
     </script>
     <div id="status"></div>
     <div id="record" class="button">Connect</div>
+    <input type="text" id="textInput">
     <div id="items"></div>
   </body>
 </html>

@@ -10,6 +10,9 @@ const wav = require("wav");
 const path = require("path");
 const schema = require("./schema");
 const logger = console;
+const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
+const uuidv4 = require("uuid/v4");
 
 const shouldEnforceSchema = process.env.ASSERT_SCHEMA == "true";
 const appId = process.env.APP_ID;
@@ -52,6 +55,7 @@ const SgGrpc = grpc.loadPackageDefinition(
 const errors = {
   S01: "Invalid session",
   S02: "Invalid deviceId",
+  S03: "Invalid token",
   C01: "Client version too old",
   G01: "General failure"
 };
@@ -139,11 +143,21 @@ const findSegments = utterance => {
   );
 };
 
-const findSegmentsWithProducts = (utterance, language) => {
+const findSegmentsWithProducts = (utterance, language, doSegmentation) => {
   try {
-    const segments = findSegments(utterance);
-    const queriesForSegments = segments.map(tokens => createProductQuery(tokens, getEntitySpans(tokens), language, 25));
-    return queriesForSegments.map(query => productSearch.queryProducts(query));
+    const maxProducts = 25
+    if (doSegmentation) {
+      const segments = findSegments(utterance);
+      const queriesForSegments = segments.map(tokens => createProductQuery(tokens, getEntitySpans(tokens), language, maxProducts));
+      return queriesForSegments.map(query => productSearch.queryProducts(query));
+    } else {
+      const tokens = utterance.tokens
+      let entitySpans = [
+        { label: 'query', start: 0, end: tokens.length }
+      ]
+      const query = createProductQuery(tokens, entitySpans, language, maxProducts)
+      return [productSearch.queryProducts(query)]
+    }
   } catch (err) {
     logger.debug("Failed to handle product query");
     logger.debug(err);
@@ -157,11 +171,11 @@ const softMax = values => {
   return exponents.map(exp => exp / total);
 };
 
-const parseProductSegments = utteranceData => {
+const parseProductSegments = (utteranceData, doSegmentation = true) => {
   const language = utteranceData.languageCode.slice(0, 2);
   const confidences = softMax(utteranceData.alternatives.map(alternative => alternative.confidence));
   const alternativeSegments = utteranceData.alternatives.map(alternative =>
-    findSegmentsWithProducts(alternative, language)
+    findSegmentsWithProducts(alternative, language, doSegmentation)
   );
   const scores = softMax(alternativeSegments.map(alt => alt.map(seg => seg.score).reduce((x, y) => x + y, 0.0)));
   const bestSegments =
@@ -249,7 +263,7 @@ const processData = (websocket, wavWriter) => {
       send({ event: "stopped", data: data.finished });
       wavWriter.stop(data.finished.utteranceId);
     } else {
-      const productSegments = parseProductSegments(data.utterance);
+      const productSegments = parseProductSegments(data.utterance, true);
       if (websocket.readyState === 1 && !R.isEmpty(productSegments)) {
         send({
           event: "transcription",
@@ -356,39 +370,16 @@ const verifyClient = (info, cb) => {
   }
 
   const params = queryString.parse(queryStr);
-  const findDeviceId = () => {
-    if (params.deviceId !== undefined) {
-      return params.deviceId;
-    } else {
-      if (info.req.headers["user-agent"] === undefined) {
-        info.req[kError] = JSON.stringify({
-          event: "error",
-          data: {
-            error: errors["S02"],
-            code: "S02"
-          }
-        });
-      } else {
-        return crypto
-          .createHash("md5")
-          .update(info.req.headers["user-agent"])
-          .digest("hex");
-      }
-    }
-  };
 
   info.req[kParams] = params;
   return Promise.resolve()
     .then(() => {
-      // TODO: find token from cookie or local storage
-      const token = info.req.headers.jwt;
-      if (token === undefined) {
-        return createToken(findDeviceId());
+      if (!params.token) {
+        throw new Error("S03")
       }
-      return Promise.resolve(token);
+      return Promise.resolve(params.token);
     })
     .then(token => {
-      // TODO: store the token as cookie or local storage
       info.req[kToken] = token;
     })
     .catch(err => {
@@ -458,6 +449,49 @@ httpApp.get("/checkout", function(req, res) {
 httpApp.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "www", "index.html"));
 });
+httpApp.use(bodyParser.json());
+httpApp.use(cookieParser())
+httpApp.post("/login", async (req, res) => {
+  let token = await createToken(req.body.deviceId || uuidv4())
+  res.cookie('token', token)
+  await res.json({ token })
+})
+httpApp.post("/textSearch", async (req, res) => {
+  const text = req.body.text
+  const languageCode = req.body.languageCode || "fi-FI"
+  const token = req.cookies.token
+  if (!token) {
+    res.status(500).end('Token missing')
+    return
+  }
+  const writtenMetadata = new grpc.Metadata()
+  writtenMetadata.add("Authorization", `Bearer ${token}`)
+  const writtenClient = new SgGrpc.speechgrinder.sgapi.v1.Wlu(sgApiUrl, grpc.credentials.createSsl())
+  writtenClient.Parse({
+    text,
+    languageCode
+  }, writtenMetadata, (err, response) => {
+    if (err) {
+      console.error('Wlu error', err)
+      res.status(400).send({
+        error: err
+      })
+    } else {
+      let utterance = {
+        languageCode,
+        alternatives: [response],
+        type: 'finalItem',
+        utteranceId: uuidv4()
+      }
+      const productSegments = parseProductSegments(utterance, false)
+      res.send({
+        utteranceId: utterance.utteranceId,
+        type: utterance.type,
+        segments: productSegments
+      })
+    }
+  })
+})
 
 const httpServer = http.createServer(httpApp);
 bindWebSocket(httpServer);

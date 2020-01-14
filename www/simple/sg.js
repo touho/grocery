@@ -129,7 +129,11 @@ function slu() {
     // example when opening a language specific slu stream:
     // const languageCode = "en-US";
     // const ws = new WebSocket(`${wsUrl}?sampleRate=16000&languageCode=${languageCode}`);
-    const ws = new WebSocket(`${wsUrl}?sampleRate=16000`);
+    let url = `${wsUrl}?sampleRate=16000`
+    if (localStorage.token) {
+      url += '&token=' + localStorage.token
+    }
+    const ws = new WebSocket(url);
     let timeoutHandle = undefined;
     let isRecording = false;
 
@@ -180,5 +184,27 @@ function slu() {
     return ws;
   }
 
+  return context;
+}
+
+function wlu() {
+  const context = { ontranscription: () => {} };
+  context.search = text => {
+    if (!text) return
+
+    fetch("/textSearch", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        text
+      })
+    }).then(response => {
+      response.json().then(context.ontranscription)
+    }).catch((e) => {
+      console.error('Wlu error', e)
+    })
+  }
   return context;
 }
