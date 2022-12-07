@@ -17,10 +17,10 @@
   "dependencies": {
     "@grpc/proto-loader": "^0.5.1",
     "@hapi/joi": "^16.1.7",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "classnames": "^2.2.6",
     "cookie-parser": "^1.4.4",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "grpc": "^1.21.1",
     "query-string": "^6.7.0",
     "ramda": "^0.26.1",
